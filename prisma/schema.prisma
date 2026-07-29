@@ -1,0 +1,165 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model Lead {
+  id        String   @id @default(uuid())
+  firstName String
+  lastName  String
+  email     String
+  phone     String?
+  company   String?
+  employees String?
+  marketingConsent Boolean @default(true)
+  
+  results   Result[]
+  createdAt DateTime @default(now())
+}
+
+model Result {
+  id        String   @id @default(uuid())
+  leadId    String
+  lead      Lead     @relation(fields: [leadId], references: [id])
+  score     Float
+  phase     Int
+  answers   String   // JSON string of answers
+  createdAt DateTime @default(now())
+}
+
+enum QuestionType {
+  matrix_1_5
+  likert_1_7
+}
+
+enum ScoringSystem {
+  maturity
+  communication
+}
+
+model Question {
+  id              Int           @id @default(autoincrement())
+  text            String
+  shortLabel      String        @default("")
+  order           Int           @default(0)
+  questionType    QuestionType  @default(matrix_1_5)
+  scoringSystem   ScoringSystem @default(maturity)
+  isReverseScored Boolean       @default(false)
+  construct       String?
+  answers         Answer[]
+}
+
+model Answer {
+  id         Int      @id @default(autoincrement())
+  text       String
+  score      Int
+  order      Int      @default(0)
+  questionId Int
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model Phase {
+  id              Int    @id @default(autoincrement())
+  title           String
+  subtitle        String @default("")
+  color           String @default("#F05324")
+  icon            String @default("Box") // Lucide icon name
+  essence         String @default("")
+  characteristics String @default("[]")
+  focus           String @default("[]")
+  challenges      String @default("[]")
+  meaningPoints   String @default("[]")
+  manifestation   String @default("{}")
+  benefits        String @default("[]")
+  recommendations String @default("")
+}
+
+model LandingStep {
+  id          Int    @id @default(autoincrement())
+  stepNumber  Int
+  title       String
+  subtitle    String
+  description String
+  icon        String @default("Box") // Lucide icon name
+}
+
+
+
+model GlobalSettings {
+  id           Int    @id @default(1)
+  logoUrl      String @default("/logo.png")
+  colors       String @default("{}") // JSON string: { primary: "...", secondary: "..." }
+  thresholds   String @default("{}") // JSON string: { "1": 1.99, "2": 2.99 ... }
+  heroTitle    String @default("ბიზნეს პროცესების სიმწიფის შეფასება")
+  heroSubtitle String @default("განსაზღვრეთ თქვენი კომპანიის განვითარების ეტაპი და მიიღეთ რეკომენდაციები შემდეგი ნაბიჯებისთვის.")
+  buttonText   String @default("შეფასების დაწყება")
+  footerText   String @default("© 2026 GEC Business. All rights reserved.")
+  contactEmail String @default("info@gec-consulting.com")
+  contactAddress String @default("Tbilisi, Georgia")
+  requireOtp     Boolean @default(true)
+  
+  // New Fields for Text Management
+  assessmentPageTitle     String @default("სტრატეგიული შეფასება")
+  assessmentPageSubtitle  String @default("გთხოვთ უპასუხოთ კითხვებს გულწრფელად")
+  assessmentPromptText    String @default("უკვე გავლილი გაქვთ თვითშეფასება? ეწვიეთ ამ ბმულს:")
+  myReportBtnText         String @default("ჩემი ანგარიში")
+  whyMattersTitle         String @default("რატომ არის ეს მნიშვნელოვანი?")
+
+  termsAndConditionsText  String @default("შეფასების გასაგრძელებლად გთხოვთ გაეცნოთ წესებსა და პირობებს და დაეთანხმოთ მათ.")
+  
+  resultPageTitle         String @default("Strategic Maturity Assessment")
+  resultPersonalReportBtn String @default("პირადი ანგარიში")
+  resultCompanyReportBtn  String @default("გუნდის ანგარიში")
+  resultOrganizationLabel String @default("ორგანიზაცია")
+  resultScoreLabel        String @default("ქულა")
+  resultDownloadBtnText   String @default("სრული რეპორტის ჩამოტვირთვა (PDF)")
+  resultRestartBtnText    String @default("თავიდან დაწყება")
+  resultNoDataText        String @default("მონაცემები არ არის")
+  
+  phaseEssenceLabel         String @default("ძირითადი არსი")
+  phaseCharacteristicsLabel String @default("საკვანზო მახასიათებლები")
+  phaseFocusLabel           String @default("ფოკუსი")
+
+  bookingText String?
+  bookingLink String?
+
+  logoWidth   Int     @default(256)
+  baseFontSize Int    @default(16)
+}
+
+
+model SystemText {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+  label String
+}
+
+model WhyItem {
+  id          String @id @default(uuid())
+  title       String
+  description String
+  icon        String
+  order       Int
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OtpVerification {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  code      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}

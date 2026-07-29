@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -Command \"Test-NetConnection -ComputerName 127.0.0.1 -Port 5432 -WarningAction SilentlyContinue | Select-Object TcpTestSucceeded\")",
+      "Bash(curl -s -X POST http://localhost:3001/api/otp/send -H 'Content-Type: application/json' -d '{\"email\":\"test-crash-repro@example.com\",\"firstName\":\"Test\",\"lastName\":\"Repro\",\"companyName\":\"TestCo\",\"phone\":\"555\",\"score\":\"3.2\",\"phaseId\":3,\"answers\":{\"1\":3},\"isNewLead\":true}' -w '\\\\nHTTP_STATUS:%{http_code}\\\\n' --max-time 20)",
+      "Bash(curl -s -X POST http://localhost:3001/api/assessment/submit -H 'Content-Type: application/json' -d '{\"firstName\":\"Test\",\"lastName\":\"Repro\",\"companyName\":\"TestCo\",\"employees\":\"1-10\",\"email\":\"test-crash-repro2@example.com\",\"phone\":\"555\",\"marketingConsent\":true,\"score\":\"3.2\",\"phaseId\":3,\"answers\":{\"1\":3,\"2\":4}}' -w '\\\\nHTTP_STATUS:%{http_code}\\\\n' --max-time 25)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
+    ]
+  }
+}

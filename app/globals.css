@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 21, 55, 73;
+  /* #153749 */
+  --background-start-rgb: 255, 255, 255;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 21, 55, 73;
+    /* #153749 */
+    --background-end-rgb: 34, 98, 99;
+    /* #226263 */
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+  min-height: 100vh;
+  font-family: 'Calibri', sans-serif;
+  letter-spacing: 0.01em; /* Baseline text breathing room */
+}
+
+@layer base {
+  h1, .text-4xl, .text-5xl, .text-6xl {
+    letter-spacing: -0.01em;
+  }
+  
+  h2, h3, .text-2xl, .text-3xl {
+    letter-spacing: 0.01em;
+  }
+  
+  p, span, div, .text-sm, .text-base, .text-lg {
+     letter-spacing: 0.02em; /* Gives text-heavy paragraphs a bit more space so they aren't squished */
+  }
+
+  input,
+  textarea,
+  select {
+    @apply text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm;
+  }
+
+  /* Specific override for Admin dark areas if needed */
+  .admin-panel input,
+  .admin-panel textarea {
+    color: #111827 !important;
+    /* Force Black */
+    background-color: #ffffff !important;
+  }
+}
