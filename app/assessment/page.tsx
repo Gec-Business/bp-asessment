@@ -1,10 +1,10 @@
 import AssessmentWizard from "@/components/AssessmentWizard";
-import { prisma } from "@/lib/prisma";
+import { getGlobalSettings } from "@/lib/settings";
 
 export const dynamic = 'force-dynamic';
 
 async function getSettings() {
-    const settings = await prisma.globalSettings.findFirst();
+    const settings = await getGlobalSettings();
     return settings || {
         assessmentPageTitle: "სტრატეგიული შეფასება",
         assessmentPageSubtitle: "გთხოვთ უპასუხოთ კითხვებს გულწრფელად",

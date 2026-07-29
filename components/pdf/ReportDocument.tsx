@@ -1,18 +1,9 @@
 
 import React from 'react';
-import { Page, Text, View, Document, StyleSheet, Font, Svg, Polygon, Line, Circle } from '@react-pdf/renderer';
-import path from 'path';
+import { Page, Text, View, Document, StyleSheet, Svg, Polygon, Line, Circle } from '@react-pdf/renderer';
+import { registerPdfFonts } from '@/lib/pdfFonts';
 
-// --- 1. SETUP & CONFIG ---
-const FONTS = {
-    regular: path.join(process.cwd(), 'public/fonts/BPG_Glaho.ttf'),
-    caps: path.join(process.cwd(), 'public/fonts/BPG_Glaho_Caps.ttf'),
-    bold: path.join(process.cwd(), 'public/fonts/BPG_Glaho_Bold.ttf')
-};
-
-Font.register({ family: "BPG Glaho", src: FONTS.regular });
-Font.register({ family: "BPG Glaho Caps", src: FONTS.caps });
-Font.register({ family: "BPG Glaho Bold", src: FONTS.bold });
+registerPdfFonts();
 
 const COLORS = {
     navy: '#153749',

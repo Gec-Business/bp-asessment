@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import WhyMatters from "@/components/WhyMatters";
 import { prisma } from "@/lib/prisma";
+import { getGlobalSettings as fetchGlobalSettings } from "@/lib/settings";
 import Header from "@/components/Header";
 import { StartAssessmentButton, MyReportButton } from "@/components/ActionButtons";
 
@@ -11,7 +12,7 @@ export const dynamic = 'force-dynamic';
 
 async function getGlobalSettings() {
     try {
-        let settings = await prisma.globalSettings.findFirst();
+        let settings = await fetchGlobalSettings();
         if (!settings) {
             // Default Fallback
             return {

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { prisma } from "@/lib/prisma";
+import { getGlobalSettings } from "@/lib/settings";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -14,7 +14,7 @@ export default async function RootLayout({
 }>) {
     let baseFontSize = 16;
     try {
-        const settings = await prisma.globalSettings.findFirst();
+        const settings = await getGlobalSettings();
         if (settings?.baseFontSize) {
             baseFontSize = settings.baseFontSize;
         }

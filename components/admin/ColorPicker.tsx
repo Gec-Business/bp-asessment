@@ -3,7 +3,7 @@
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
-export const COLOR_OPTIONS = [
+const COLOR_OPTIONS = [
     { value: "red", label: "წითელი", hex: "#F05324" },
     { value: "yellow", label: "ყვითელი", hex: "#F0B91C" },
     { value: "green", label: "მწვანე", hex: "#049978" },

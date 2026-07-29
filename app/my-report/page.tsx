@@ -34,53 +34,6 @@ export default function MyReportPage() {
         setError(null);
 
         try {
-            // 1. Check if email exists in Leads (we should probably reuse the OTP send route but it upserts)
-            // But for "Returning Users", we should verify they have a report first? 
-            // The requirements say: "verify if the email exists in the Lead table. If yes, call /api/otp/send"
-            // We need a way to check lead existence safely. 
-            // I'll call /api/otp/send anyway, but the requirement specifically asked to "verify if email exists".
-            // Since we don't have a specific "check-email" API, and /api/otp/send is generic...
-            // Actually, /api/otp/send UPSETS. It doesn't check existence of Lead.
-            // I might need to add logic to /api/otp/send OR add a new route.
-            // Requirement says: "Step 1: Input field for Email. On submit, verify if the email exists in the Lead table."
-
-            // I will implement a quick check here. 
-            // Wait, I can't query DB from client.
-            // I should use the /api/assessment/company-report?email=... to check availability? No, that's for company report.
-
-            // I will technically skip the "check lead existence" strict check in the frontend for now 
-            // OR I can use the `send` route and if it succeeds, we assume it's fine.
-            // BUT, if I want to show "No report found", I need that check.
-
-            // Let's modify /api/otp/send to optionally check for lead existence?
-            // Or better, let's just create a server action or simple check.
-            // Or I will use the /api/otp/send and assume for now. 
-            // The prompt says "Step 1: Input field for Email. On submit, verify if the email exists in the Lead table. If yes, call /api/otp/send".
-
-            // I'll implement a simple API call to check lead existence first?
-            // I'll simply call `/api/otp/send` but I'll assume valid user for now to proceed, 
-            // as I don't want to create too many new files if not strictly necessary. 
-            // Actually, I can check against `api/assessment/company-report`? No.
-
-            // I will implement the flow: Call /api/otp/send. 
-            // If the user doesn't exist, they will get an OTP but when they verify, we need to find their lead ID.
-            // The verify step says "fetch the lead.id from the database". 
-            // So if they don't have a lead, verify will succeed but we won't find a lead?
-
-            // Let's stick to the plan: Call /api/otp/send.
-            // I'll assume the user knows they have a report.
-
-            // UPDATE: To strictly follow "verify if email exists", I will assume there is an API or I should make one.
-            // I will add a `checkUser: true` flag to `/api/otp/send` ??
-            // No, I'll just proceed with sending OTP. If they don't have a report, 
-            // the `/api/otp/verify` step (which returns success) will leave us hanging.
-
-            // I'll modify the `verify` route in my head to return the lead ID?
-            // The requirements said: "If verified, fetch the lead.id from the database".
-            // So `verify` route needs to return `leadId`.
-
-            // I will proceed with just sending OTP for now.
-
             const res = await fetch("/api/otp/send", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

@@ -20,7 +20,8 @@ This is a Next.js Full Stack application for the GEC Strategic Maturity Assessme
     npm install
     ```
 
-3.  **Initialize Database (SQLite):**
+3.  **Initialize Database (Postgres):**
+    Requires a reachable Postgres database — set `DATABASE_URL` / `POSTGRES_PRISMA_URL` / `POSTGRES_URL_NON_POOLING` in `.env` first.
     ```bash
     npx prisma generate
     npx prisma db push
@@ -32,7 +33,7 @@ This is a Next.js Full Stack application for the GEC Strategic Maturity Assessme
     ```
 
 5.  **Open Browser:**
-    Go to [http://localhost:3000](http://localhost:3000)
+    Go to [http://localhost:3001](http://localhost:3001) (port is set via `.claude/launch.json` / `NEXTAUTH_URL`).
 
 ## Features
 
@@ -40,7 +41,7 @@ This is a Next.js Full Stack application for the GEC Strategic Maturity Assessme
 - **Assessment:** Multi-step wizard with 12 questions.
 - **Lead Generation:** Form to capture user details.
 - **Results:** Dynamic phase calculation and PDF report generation.
-- **Admin Panel:** Dashboard to manage questions and leads (visit `/cms` - password: `gec_admin_2024`).
+- **Admin Panel:** Dashboard to manage questions and leads (visit `/admin` — sign in with a `User` record's email/password; accounts are managed under `/admin/users`).
 
 ## Tech Stack
 
@@ -48,7 +49,7 @@ This is a Next.js Full Stack application for the GEC Strategic Maturity Assessme
 - **Styling:** Tailwind CSS
 - **Animations:** Framer Motion
 - **PDF:** @react-pdf/renderer
-- **Database:** SQLite (via Prisma)
+- **Database:** Postgres (via Prisma)
 
 ## Troubleshooting
 
