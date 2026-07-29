@@ -20,12 +20,22 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ success: false, message: "Invalid code" }, { status: 400 });
         }
 
-        if (record.code !== code) {
-            return NextResponse.json({ success: false, message: "Invalid code" }, { status: 400 });
+        const MAX_ATTEMPTS = 5;
+        if (record.attempts >= MAX_ATTEMPTS) {
+            await prisma.otpVerification.delete({ where: { email } });
+            return NextResponse.json({ success: false, message: "Too many attempts. Please request a new code." }, { status: 429 });
         }
 
         if (new Date() > record.expiresAt) {
             return NextResponse.json({ success: false, message: "Code expired" }, { status: 400 });
+        }
+
+        if (record.code !== code) {
+            await prisma.otpVerification.update({
+                where: { email },
+                data: { attempts: { increment: 1 } }
+            });
+            return NextResponse.json({ success: false, message: "Invalid code" }, { status: 400 });
         }
 
         // 3. Delete Record (Prevent Reuse)

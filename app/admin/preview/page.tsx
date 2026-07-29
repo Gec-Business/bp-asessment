@@ -93,7 +93,7 @@ export default function PreviewPage() {
                         onChange={(e) => setCommunicationScore(parseFloat(e.target.value))}
                         className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#049978]/50 focus:border-[#049978]"
                     />
-                    <p className="text-xs text-gray-500 mt-2">ეს ქულა განსაზღვრავს დამოუკიდებელი „კომუნიკაცია" სექციის მაჩვენებელს ანგარიშში.</p>
+                    <p className="text-xs text-gray-500 mt-2">ეს ქულა განსაზღვრავს დამოუკიდებელი „კომუნიკაცია“ სექციის მაჩვენებელს ანგარიშში.</p>
                 </div>
 
                 <button

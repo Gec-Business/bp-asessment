@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
         // 3. Upsert to DB
         await prisma.otpVerification.upsert({
             where: { email },
-            update: { code, expiresAt },
+            update: { code, expiresAt, attempts: 0 },
             create: { email, code, expiresAt }
         });
 

@@ -18,8 +18,15 @@ export async function GET(req: NextRequest) {
         let targetDomain = '';
 
         // 1. Resolve Domain
+        // The `email` path must only ever resolve a domain for an email that
+        // actually completed the assessment — otherwise anyone could pass an
+        // arbitrary company's domain here and pull their aggregate data
+        // without ever being a participant.
         if (email) {
-            if (email.includes('@')) targetDomain = email.split('@')[1].toLowerCase();
+            if (email.includes('@')) {
+                const requester = await prisma.lead.findFirst({ where: { email } });
+                if (requester) targetDomain = email.split('@')[1].toLowerCase();
+            }
         } else if (leadId) {
             const lead = await prisma.lead.findUnique({ where: { id: leadId } });
             if (lead && lead.email.includes('@')) {
