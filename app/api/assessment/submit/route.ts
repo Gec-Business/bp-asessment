@@ -112,16 +112,3 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Failed to submit assessment" }, { status: 500 });
   }
 }
-
-export async function GET() {
-  // Admin only - fetch all leads
-  try {
-    const leads = await prisma.lead.findMany({
-      include: { results: { orderBy: { createdAt: 'desc' } } },
-      orderBy: { createdAt: 'desc' }
-    });
-    return NextResponse.json(leads);
-  } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch leads" }, { status: 500 });
-  }
-}

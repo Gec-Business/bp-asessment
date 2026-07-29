@@ -231,8 +231,12 @@ async function main() {
     // ==========================================
     // 4. SEED ADMIN USER
     // ==========================================
-    const email = "bbaiashvili@gecbusiness.com";
-    const password = "Gec@theBest2026";
+    const email = process.env.ADMIN_SEED_EMAIL;
+    const password = process.env.ADMIN_SEED_PASSWORD;
+
+    if (!email || !password) {
+        throw new Error("ADMIN_SEED_EMAIL and ADMIN_SEED_PASSWORD environment variables must be set to seed the admin user.");
+    }
 
     // Check if user exists
     const existingUser = await prisma.user.findUnique({ where: { email } });
