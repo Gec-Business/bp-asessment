@@ -4,9 +4,14 @@ import { prisma } from "@/lib/prisma";
 import { questions as initialQuestions } from "@/lib/questions";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { getLocaleFromRequest } from "@/lib/i18n/getLocaleFromRequest";
+import { localizeQuestion } from "@/lib/i18n/localize";
 
-// GET: Fetch all questions (ordered)
-export async function GET() {
+// GET: Fetch all questions (ordered). Admin (authenticated) requests get raw
+// bilingual rows for editing; public requests get localized single-language data.
+export async function GET(req: NextRequest) {
+    const locale = getLocaleFromRequest(req);
+    const isAdmin = !!(await getServerSession(authOptions));
     try {
         const questions = await prisma.question.findMany({
             include: { answers: { orderBy: { order: 'asc' } } },
@@ -35,10 +40,10 @@ export async function GET() {
                 include: { answers: { orderBy: { order: 'asc' } } },
                 orderBy: { order: 'asc' }
             });
-            return NextResponse.json(seeded);
+            return NextResponse.json(isAdmin ? seeded : seeded.map((q) => localizeQuestion(q, locale)));
         }
 
-        return NextResponse.json(questions);
+        return NextResponse.json(isAdmin ? questions : questions.map((q) => localizeQuestion(q, locale)));
     } catch (error) {
         console.error("Failed to fetch questions:", error);
         return NextResponse.json({ error: "Failed to fetch questions" }, { status: 500 });
@@ -54,13 +59,16 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         const {
             text,
+            textKa,
             shortLabel,
+            shortLabelKa,
             answers,
             questionType = "matrix_1_5",
             scoringSystem = "maturity",
             isReverseScored = false,
             construct = null,
-        } = body; // answers: { text, score }[] — only used for matrix_1_5
+            constructKa = null,
+        } = body; // answers: { text, textKa, score }[] — only used for matrix_1_5
 
         const count = await prisma.question.count();
         const isLikert = questionType === "likert_1_7";
@@ -68,19 +76,23 @@ export async function POST(req: NextRequest) {
         const newQuestion = await prisma.question.create({
             data: {
                 text,
+                textKa,
                 shortLabel: shortLabel || "",
+                shortLabelKa,
                 order: count + 1,
                 questionType,
                 scoringSystem,
                 // Defense in depth: reverse-scoring only ever applies to likert_1_7 questions.
                 isReverseScored: isLikert ? !!isReverseScored : false,
                 construct: scoringSystem === "communication" ? (construct || null) : null,
+                constructKa: scoringSystem === "communication" ? (constructKa || null) : null,
                 ...(isLikert
                     ? {}
                     : {
                         answers: {
                             create: (answers || []).map((a: any, idx: number) => ({
                                 text: a.text,
+                                textKa: a.textKa,
                                 score: parseInt(a.score),
                                 order: idx
                             }))
@@ -107,12 +119,15 @@ export async function PUT(req: NextRequest) {
         const {
             id,
             text,
+            textKa,
             shortLabel,
+            shortLabelKa,
             answers,
             questionType = "matrix_1_5",
             scoringSystem = "maturity",
             isReverseScored = false,
             construct = null,
+            constructKa = null,
         } = body;
         const isLikert = questionType === "likert_1_7";
 
@@ -123,11 +138,14 @@ export async function PUT(req: NextRequest) {
                 where: { id: parseInt(id) },
                 data: {
                     text,
+                    textKa,
                     shortLabel: shortLabel || "",
+                    shortLabelKa,
                     questionType,
                     scoringSystem,
                     isReverseScored: isLikert ? !!isReverseScored : false,
                     construct: scoringSystem === "communication" ? (construct || null) : null,
+                    constructKa: scoringSystem === "communication" ? (constructKa || null) : null,
                 }
             });
 
@@ -142,6 +160,7 @@ export async function PUT(req: NextRequest) {
                 await tx.answer.createMany({
                     data: answers.map((a: any, idx: number) => ({
                         text: a.text,
+                        textKa: a.textKa,
                         score: parseInt(a.score),
                         order: idx,
                         questionId: parseInt(id)

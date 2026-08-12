@@ -2,15 +2,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import ReactPDF from "@react-pdf/renderer";
 import ReportDocument from "@/components/pdf/ReportDocument";
+import { getLocaleFromRequest } from "@/lib/i18n/getLocaleFromRequest";
 
 export async function POST(req: NextRequest) {
     try {
+        const locale = getLocaleFromRequest(req);
         const body = await req.json();
         const { score, firstName, companyName, phaseId, phaseConfig, radarData } = body;
 
         // Generate PDF Stream
         const stream = await ReactPDF.renderToStream(
-            <ReportDocument data={body} />
+            <ReportDocument data={body} locale={locale} />
         );
 
         // Return as stream

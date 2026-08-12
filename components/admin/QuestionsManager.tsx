@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { GripVertical } from "lucide-react";
+import { useContentLocale, fieldKey } from "@/lib/i18n/ContentLocaleContext";
 
 // Types matching Prisma model (approx)
 type QuestionType = "matrix_1_5" | "likert_1_7";
@@ -10,18 +11,22 @@ type ScoringSystem = "maturity" | "communication";
 type Answer = {
     id?: number;
     text: string;
+    textKa?: string | null;
     score: number;
 };
 
 type Question = {
     id: number;
     text: string;
+    textKa?: string | null;
     shortLabel: string;
+    shortLabelKa?: string | null;
     order: number;
     questionType: QuestionType;
     scoringSystem: ScoringSystem;
     isReverseScored: boolean;
     construct: string | null;
+    constructKa?: string | null;
     answers: Answer[];
 };
 
@@ -35,17 +40,22 @@ const DEFAULT_MATRIX_ANSWERS: Answer[] = [
 
 const NEW_QUESTION_TEMPLATE: Question = {
     id: -1,
-    text: "ახალი კითხვა",
+    text: "New question",
+    textKa: "",
     shortLabel: "New Label",
+    shortLabelKa: "",
     order: 0,
     questionType: "matrix_1_5",
     scoringSystem: "maturity",
     isReverseScored: false,
     construct: null,
+    constructKa: null,
     answers: DEFAULT_MATRIX_ANSWERS.map(a => ({ ...a })),
 };
 
 export default function QuestionsManager() {
+    const { contentLocale } = useContentLocale();
+    const tf = (field: string) => fieldKey(field, contentLocale);
     const [questions, setQuestions] = useState<Question[]>([]);
     const [loading, setLoading] = useState(true);
     const [editing, setEditing] = useState<number | "new" | null>(null);
@@ -119,7 +129,7 @@ export default function QuestionsManager() {
         setEditForm({ ...editForm, scoringSystem: newScoring });
     };
 
-    const handleAnswerChange = (idx: number, field: 'text' | 'score', value: string | number) => {
+    const handleAnswerChange = (idx: number, field: string, value: string | number) => {
         if (!editForm) return;
         const newAnswers = [...editForm.answers];
         newAnswers[idx] = { ...newAnswers[idx], [field]: value };
@@ -258,21 +268,25 @@ export default function QuestionsManager() {
         return (
             <div className="space-y-4">
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Question Text</label>
+                    <label className="block text-sm font-medium text-gray-700">
+                        Question Text <span className="text-xs font-normal text-gray-400 uppercase">({contentLocale})</span>
+                    </label>
                     <input
                         type="text"
-                        value={editForm.text}
-                        onChange={(e) => setEditForm({ ...editForm, text: e.target.value })}
+                        value={(editForm as any)[tf('text')] || ""}
+                        onChange={(e) => setEditForm({ ...editForm, [tf('text')]: e.target.value } as Question)}
                         className="mt-1 w-full border p-2 rounded text-gray-900 bg-white"
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Short Label (for Radar Chart)</label>
+                    <label className="block text-sm font-medium text-gray-700">
+                        Short Label (for Radar Chart) <span className="text-xs font-normal text-gray-400 uppercase">({contentLocale})</span>
+                    </label>
                     <input
                         type="text"
-                        value={editForm.shortLabel || ""}
-                        onChange={(e) => setEditForm({ ...editForm, shortLabel: e.target.value })}
+                        value={(editForm as any)[tf('shortLabel')] || ""}
+                        onChange={(e) => setEditForm({ ...editForm, [tf('shortLabel')]: e.target.value } as Question)}
                         className="mt-1 w-full border p-2 rounded text-gray-900 bg-white"
                         placeholder="e.g. Org Culture"
                     />
@@ -316,12 +330,14 @@ export default function QuestionsManager() {
 
                 {isCommunication && (
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Construct (sub-grouping)</label>
+                        <label className="block text-sm font-medium text-gray-700">
+                            Construct (sub-grouping) <span className="text-xs font-normal text-gray-400 uppercase">({contentLocale})</span>
+                        </label>
                         <input
                             type="text"
                             list="construct-options"
-                            value={editForm.construct || ""}
-                            onChange={(e) => setEditForm({ ...editForm, construct: e.target.value || null })}
+                            value={(editForm as any)[tf('construct')] || ""}
+                            onChange={(e) => setEditForm({ ...editForm, [tf('construct')]: e.target.value || null } as Question)}
                             className="mt-1 w-full border p-2 rounded text-gray-900 bg-white"
                             placeholder="e.g. internal_communication"
                         />
@@ -333,7 +349,9 @@ export default function QuestionsManager() {
 
                 {!isLikert && (
                     <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">Answers (drag to reorder)</label>
+                        <label className="block text-sm font-medium text-gray-700">
+                            Answers (drag to reorder) <span className="text-xs font-normal text-gray-400 uppercase">({contentLocale})</span>
+                        </label>
                         {editForm.answers.map((ans, idx) => (
                             <div
                                 key={idx}
@@ -351,8 +369,8 @@ export default function QuestionsManager() {
                                 </span>
                                 <input
                                     type="text"
-                                    value={ans.text}
-                                    onChange={(e) => handleAnswerChange(idx, 'text', e.target.value)}
+                                    value={(ans as any)[tf('text')] || ""}
+                                    onChange={(e) => handleAnswerChange(idx, tf('text'), e.target.value)}
                                     className="flex-1 border p-2 rounded text-sm text-gray-900 bg-white"
                                 />
                                 <input
@@ -419,7 +437,7 @@ export default function QuestionsManager() {
                                         </span>
                                     )}
                                     <div>
-                                        <h3 className="font-bold text-lg text-gec-navy">#{q.order} {q.text}</h3>
+                                        <h3 className="font-bold text-lg text-gec-navy">#{q.order} {(q as any)[tf('text')] || q.text}</h3>
                                         <div className="mt-1 flex flex-wrap gap-2 text-xs">
                                             <span className="px-2 py-0.5 rounded bg-gray-100 text-gray-600">
                                                 {q.questionType === "likert_1_7" ? "Likert (1-7)" : "Matrix (1-5)"}
@@ -457,7 +475,7 @@ export default function QuestionsManager() {
                                 <ul className="mt-4 space-y-1">
                                     {q.answers.map((ans, i) => (
                                         <li key={i} className="text-sm text-gray-600 flex justify-between">
-                                            <span>• {ans.text}</span>
+                                            <span>• {(ans as any)[tf('text')] || ans.text}</span>
                                             <span className="font-mono text-gray-400">({ans.score})</span>
                                         </li>
                                     ))}

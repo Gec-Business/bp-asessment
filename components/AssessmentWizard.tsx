@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { computeMaturityScore, computeCommunicationScore } from "@/lib/scoring";
+import { useDictionary, useLocale } from "@/lib/i18n/LocaleProvider";
 
 type Answer = {
     text: string;
@@ -31,6 +32,8 @@ type AssessmentWizardProps = {
 
 export default function AssessmentWizard({ termsText }: AssessmentWizardProps) {
     const router = useRouter();
+    const dict = useDictionary().wizard;
+    const { locale } = useLocale();
     const [stage, setStage] = useState<"terms" | "quiz" | "declined">("terms");
     const [questions, setQuestions] = useState<Question[]>([]);
     const [loading, setLoading] = useState(true);
@@ -58,13 +61,13 @@ export default function AssessmentWizard({ termsText }: AssessmentWizardProps) {
             }
         };
         fetchQuestions();
-    }, [stage]);
+    }, [stage, locale]);
 
     if (stage === "terms") {
         return (
             <div className="w-full max-w-4xl mx-auto bg-white dark:bg-gec-navy p-6 md:p-10 rounded-2xl shadow-xl border border-gray-100 dark:border-gec-teal">
                 <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gec-navy dark:text-white">
-                    წესები და პირობები
+                    {dict.termsTitle}
                 </h2>
                 <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line mb-10">
                     {termsText}
@@ -74,13 +77,13 @@ export default function AssessmentWizard({ termsText }: AssessmentWizardProps) {
                         onClick={() => setStage("quiz")}
                         className="flex-1 px-6 py-4 rounded-xl font-bold text-lg bg-gec-orange text-white hover:opacity-90 transition-opacity shadow-sm"
                     >
-                        ვეთანხმები
+                        {dict.agree}
                     </button>
                     <button
                         onClick={() => setStage("declined")}
                         className="flex-1 px-6 py-4 rounded-xl font-bold text-lg border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-gec-orange hover:text-gec-orange transition-colors"
                     >
-                        არ ვეთანხმები
+                        {dict.disagree}
                     </button>
                 </div>
             </div>
@@ -91,13 +94,13 @@ export default function AssessmentWizard({ termsText }: AssessmentWizardProps) {
         return (
             <div className="w-full max-w-4xl mx-auto bg-white dark:bg-gec-navy p-6 md:p-10 rounded-2xl shadow-xl border border-gray-100 dark:border-gec-teal text-center">
                 <p className="text-xl font-medium text-gec-navy dark:text-white mb-8">
-                    სამწუხაროდ, წესებსა და პირობებზე დათანხმების გარეშე შეფასების გაგრძელება შეუძლებელია.
+                    {dict.declinedMessage}
                 </p>
                 <button
                     onClick={() => setStage("terms")}
                     className="px-6 py-3 rounded-xl font-bold border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-gec-orange hover:text-gec-orange transition-colors"
                 >
-                    უკან დაბრუნება
+                    {dict.goBack}
                 </button>
             </div>
         );
@@ -112,7 +115,7 @@ export default function AssessmentWizard({ termsText }: AssessmentWizardProps) {
     }
 
     if (questions.length === 0) {
-        return <div className="text-center">კითხვები არ მოიძებნა.</div>;
+        return <div className="text-center">{dict.noQuestionsFound}</div>;
     }
 
     const currentQuestion = questions[currentQuestionIndex];
@@ -190,8 +193,8 @@ export default function AssessmentWizard({ termsText }: AssessmentWizardProps) {
                                 ))}
                             </div>
                             <div className="mt-4 flex justify-between text-sm text-gray-500 dark:text-gray-400 max-w-md mx-auto">
-                                <span>სრულიად არ ვეთანხმები</span>
-                                <span>სრულიად ვეთანხმები</span>
+                                <span>{dict.likertDisagree}</span>
+                                <span>{dict.likertAgree}</span>
                             </div>
                         </div>
                     ) : (
@@ -220,10 +223,10 @@ export default function AssessmentWizard({ termsText }: AssessmentWizardProps) {
                     onClick={() => setCurrentQuestionIndex(prev => prev - 1)}
                     className="px-4 py-2 hover:text-gec-orange disabled:opacity-50"
                 >
-                    ← უკან
+                    {dict.back}
                 </button>
                 <span>
-                    კითხვა {currentQuestionIndex + 1} / {totalQuestions}
+                    {dict.questionCounter(currentQuestionIndex + 1, totalQuestions)}
                 </span>
             </div>
         </div>

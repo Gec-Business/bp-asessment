@@ -6,58 +6,63 @@ import { prisma } from "@/lib/prisma";
 import { getGlobalSettings as fetchGlobalSettings } from "@/lib/settings";
 import Header from "@/components/Header";
 import { StartAssessmentButton, MyReportButton } from "@/components/ActionButtons";
+import { getLocale } from "@/lib/i18n/getLocale";
+import { getDictionary } from "@/lib/i18n/dictionaries";
+import { localizeGlobalSettings, localizeWhyItem } from "@/lib/i18n/localize";
+import type { Locale } from "@/lib/i18n/locales";
 
 // Force dynamic since we read from DB and settings might change
 export const dynamic = 'force-dynamic';
 
-async function getGlobalSettings() {
+async function getGlobalSettings(locale: Locale) {
     try {
         let settings = await fetchGlobalSettings();
         if (!settings) {
             // Default Fallback
             return {
-                heroTitle: "ბიზნეს პროცესების სიმწიფის შეფასება",
-                heroSubtitle: "განსაზღვრეთ თქვენი კომპანიის განვითარების ეტაპი და მიიღეთ რეკომენდაციები შემდეგი ნაბიჯებისთვის.",
-                buttonText: "შეფასების დაწყება",
+                heroTitle: "Business Process Maturity Assessment",
+                heroSubtitle: "Determine your company's stage of development and get recommendations for the next steps.",
+                buttonText: "Start Assessment",
                 logoUrl: "/logo.png",
                 footerText: "© 2026 GEC Business. All rights reserved.",
                 contactEmail: "",
                 contactAddress: "",
                 logoWidth: 256,
                 // Defaults for new fields
-                myReportBtnText: "ჩემი ანგარიში",
-                assessmentPromptText: "უკვე გავლილი გაქვთ თვითშეფასება? ეწვიეთ ამ ბმულს:",
-                whyMattersTitle: "რატომ არის ეს მნიშვნელოვანი?",
-                phaseEssenceLabel: "არსი",
-                phaseCharacteristicsLabel: "მახასიათებლები",
-                phaseFocusLabel: "ფოკუსი"
+                myReportBtnText: "My Report",
+                assessmentPromptText: "Already completed the self-assessment? Visit this link:",
+                whyMattersTitle: "Why does this matter?",
+                phaseEssenceLabel: "Essence",
+                phaseCharacteristicsLabel: "Characteristics",
+                phaseFocusLabel: "Focus"
             };
         }
-        return settings;
+        return localizeGlobalSettings(settings, locale);
     } catch (e) {
         console.error("Failed to fetch settings", e);
         return {
-            heroTitle: "ბიზნეს პროცესების სიმწიფის შეფასება",
+            heroTitle: "Business Process Maturity Assessment",
             heroSubtitle: "Error loading settings...",
-            buttonText: "შეფასების დაწყება",
+            buttonText: "Start Assessment",
             logoUrl: "/logo.png",
             footerText: "© 2026 GEC Business",
             contactEmail: "",
             contactAddress: "",
             logoWidth: 256,
-            myReportBtnText: "ჩემი ანგარიში",
-            assessmentPromptText: "უკვე გავლილი გაქვთ თვითშეფასება? ეწვიეთ ამ ბმულს:",
-            whyMattersTitle: "რატომ არის ეს მნიშვნელოვანი?",
-            phaseEssenceLabel: "არსი",
-            phaseCharacteristicsLabel: "მახასიათებლები",
-            phaseFocusLabel: "ფოკუსი"
+            myReportBtnText: "My Report",
+            assessmentPromptText: "Already completed the self-assessment? Visit this link:",
+            whyMattersTitle: "Why does this matter?",
+            phaseEssenceLabel: "Essence",
+            phaseCharacteristicsLabel: "Characteristics",
+            phaseFocusLabel: "Focus"
         };
     }
 }
 
-async function getWhyItems() {
+async function getWhyItems(locale: Locale) {
     try {
-        return await prisma.whyItem.findMany({ orderBy: { order: 'asc' } });
+        const items = await prisma.whyItem.findMany({ orderBy: { order: 'asc' } });
+        return items.map((i) => localizeWhyItem(i, locale));
     } catch (e) {
         console.error("Failed to fetch why items", e);
         return [];
@@ -65,8 +70,10 @@ async function getWhyItems() {
 }
 
 export default async function Home() {
-    const settings = await getGlobalSettings();
-    const whyItems = await getWhyItems();
+    const locale = getLocale();
+    const dict = getDictionary(locale);
+    const settings = await getGlobalSettings(locale);
+    const whyItems = await getWhyItems(locale);
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-4 md:p-8 bg-gec-navy text-gec-white bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-900 via-gec-navy to-black overflow-hidden selection:bg-gec-orange selection:text-white">
@@ -99,14 +106,14 @@ export default async function Home() {
                 <div className="flex flex-col items-center gap-4 mb-12">
                     <div className="flex items-center justify-center gap-2 mb-2 text-gec-yellow max-w-xl text-center px-4">
                         <span className="text-sm md:text-base font-medium">
-                            კომპანიის გაერთიანებულ შედეგებში არ გამოჩნდება თქვენი სახელი.
+                            {dict.landing.anonymityNote}
                         </span>
                     </div>
                     <StartAssessmentButton text={settings.buttonText} />
 
                     <div className="flex flex-col items-center gap-2 mt-2">
-                        <span className="text-white/60 text-sm">{settings.assessmentPromptText || "უკვე გავლილი გაქვთ თვითშეფასება? ეწვიეთ ამ ბმულს:"}</span>
-                        <MyReportButton text={settings.myReportBtnText || "ჩემი ანგარიში"} />
+                        <span className="text-white/60 text-sm">{settings.assessmentPromptText || dict.landing.assessmentPromptFallback}</span>
+                        <MyReportButton text={settings.myReportBtnText || dict.landing.myReportBtnFallback} />
                     </div>
                 </div>
 

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Check, ChevronRight } from "lucide-react";
+import { useContentLocale, fieldKey } from "@/lib/i18n/ContentLocaleContext";
 
 type GlobalSettings = {
     id: number;
@@ -51,6 +52,8 @@ type GlobalSettings = {
 const TABS = ["General", "Landing Page", "Assessment", "Results & Reports"];
 
 export default function GlobalSettingsManager() {
+    const { contentLocale } = useContentLocale();
+    const tf = (field: string) => fieldKey(field, contentLocale);
     const [settings, setSettings] = useState<GlobalSettings | null>(null);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -95,10 +98,15 @@ export default function GlobalSettingsManager() {
         }
     };
 
-    const handleChange = (key: keyof GlobalSettings, value: any) => {
+    const handleChange = (key: string, value: any) => {
         if (!settings) return;
         setSettings({ ...settings, [key]: value });
     };
+
+    // Bilingual text-field helpers: reads/writes the field for whichever
+    // language the admin content-locale toggle is currently set to.
+    const tVal = (field: string) => (settings as any)?.[tf(field)] || "";
+    const tChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleChange(tf(field), e.target.value);
 
     if (loading) return <div>Loading settings...</div>;
     if (!settings) return <div>Error loading settings.</div>;
@@ -114,6 +122,10 @@ export default function GlobalSettingsManager() {
                 >
                     {saving ? "Saving..." : <><Check size={18} /> Save Changes</>}
                 </button>
+            </div>
+
+            <div className="px-6 pt-4 flex justify-end">
+                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Editing text in: {contentLocale === "ka" ? "Georgian" : "English"}</span>
             </div>
 
             <div className="flex border-b">
@@ -182,8 +194,8 @@ export default function GlobalSettingsManager() {
                         <div>
                             <label className="block text-sm font-medium mb-1 text-gray-700">Footer Copyright Text</label>
                             <input
-                                value={settings.footerText || ""}
-                                onChange={(e) => handleChange("footerText", e.target.value)}
+                                value={tVal("footerText")}
+                                onChange={tChange("footerText")}
                                 className="w-full border p-2 rounded text-gray-900 bg-white focus:ring-2 focus:ring-gec-orange outline-none"
                             />
                         </div>
@@ -200,8 +212,8 @@ export default function GlobalSettingsManager() {
                             <div>
                                 <label className="block text-sm font-medium mb-1 text-gray-700">Contact Address</label>
                                 <input
-                                    value={settings.contactAddress || ""}
-                                    onChange={(e) => handleChange("contactAddress", e.target.value)}
+                                    value={tVal("contactAddress")}
+                                    onChange={tChange("contactAddress")}
                                     className="w-full border p-2 rounded text-gray-900 bg-white focus:ring-2 focus:ring-gec-orange outline-none"
                                 />
                             </div>
@@ -214,32 +226,32 @@ export default function GlobalSettingsManager() {
                         <div>
                             <label className="block text-sm font-medium mb-1 text-gray-700">Hero Title</label>
                             <input
-                                value={settings.heroTitle}
-                                onChange={(e) => handleChange("heroTitle", e.target.value)}
+                                value={tVal("heroTitle")}
+                                onChange={tChange("heroTitle")}
                                 className="w-full border p-2 rounded text-gray-900 bg-white focus:ring-2 focus:ring-gec-orange outline-none"
                             />
                         </div>
                         <div>
                             <label className="block text-sm font-medium mb-1 text-gray-700">Hero Subtitle</label>
                             <textarea
-                                value={settings.heroSubtitle}
-                                onChange={(e) => handleChange("heroSubtitle", e.target.value)}
+                                value={tVal("heroSubtitle")}
+                                onChange={tChange("heroSubtitle")}
                                 className="w-full border p-2 rounded h-24 text-gray-900 bg-white focus:ring-2 focus:ring-gec-orange outline-none"
                             />
                         </div>
                         <div>
                             <label className="block text-sm font-medium mb-1 text-gray-700">CTA Button Text</label>
                             <input
-                                value={settings.buttonText}
-                                onChange={(e) => handleChange("buttonText", e.target.value)}
+                                value={tVal("buttonText")}
+                                onChange={tChange("buttonText")}
                                 className="w-full border p-2 rounded text-gray-900 bg-white focus:ring-2 focus:ring-gec-orange outline-none"
                             />
                         </div>
                         <div>
                             <label className="block text-sm font-medium mb-1 text-gray-700">&quot;Why Matters&quot; Section Title</label>
                             <input
-                                value={settings.whyMattersTitle || "რატომ არის ეს მნიშვნელოვანი?"}
-                                onChange={(e) => handleChange("whyMattersTitle", e.target.value)}
+                                value={tVal("whyMattersTitle")}
+                                onChange={tChange("whyMattersTitle")}
                                 className="w-full border p-2 rounded text-gray-900 bg-white focus:ring-2 focus:ring-gec-orange outline-none"
                             />
                         </div>
@@ -267,16 +279,16 @@ export default function GlobalSettingsManager() {
                         <div>
                             <label className="block text-sm font-medium mb-1 text-gray-700">Assessment Page Title</label>
                             <input
-                                value={settings.assessmentPageTitle || ""}
-                                onChange={(e) => handleChange("assessmentPageTitle", e.target.value)}
+                                value={tVal("assessmentPageTitle")}
+                                onChange={tChange("assessmentPageTitle")}
                                 className="w-full border p-2 rounded text-gray-900 bg-white focus:ring-2 focus:ring-gec-orange outline-none"
                             />
                         </div>
                         <div>
                             <label className="block text-sm font-medium mb-1 text-gray-700">Assessment Page Subtitle</label>
                             <input
-                                value={settings.assessmentPageSubtitle || ""}
-                                onChange={(e) => handleChange("assessmentPageSubtitle", e.target.value)}
+                                value={tVal("assessmentPageSubtitle")}
+                                onChange={tChange("assessmentPageSubtitle")}
                                 className="w-full border p-2 rounded text-gray-900 bg-white focus:ring-2 focus:ring-gec-orange outline-none"
                             />
                         </div>
@@ -285,16 +297,16 @@ export default function GlobalSettingsManager() {
                             <div>
                                 <label className="block text-sm font-medium mb-1 text-gray-700">Prompt: Already took assessment?</label>
                                 <input
-                                    value={settings.assessmentPromptText || ""}
-                                    onChange={(e) => handleChange("assessmentPromptText", e.target.value)}
+                                    value={tVal("assessmentPromptText")}
+                                    onChange={tChange("assessmentPromptText")}
                                     className="w-full border p-2 rounded text-gray-900 bg-white focus:ring-2 focus:ring-gec-orange outline-none"
                                 />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1 text-gray-700">Button: My Report</label>
                                 <input
-                                    value={settings.myReportBtnText || ""}
-                                    onChange={(e) => handleChange("myReportBtnText", e.target.value)}
+                                    value={tVal("myReportBtnText")}
+                                    onChange={tChange("myReportBtnText")}
                                     className="w-full border p-2 rounded text-gray-900 bg-white focus:ring-2 focus:ring-gec-orange outline-none"
                                 />
                             </div>
@@ -303,17 +315,17 @@ export default function GlobalSettingsManager() {
                         <div className="pt-6 border-t">
                             <h3 className="text-sm font-bold text-gray-900 mb-4">Terms &amp; Conditions</h3>
                             <label className="block text-sm font-medium mb-1 text-gray-700">
-                                წესები და პირობები (shown before the assessment starts)
+                                Terms and Conditions text (shown before the assessment starts)
                             </label>
                             <textarea
                                 dir="auto"
-                                value={settings.termsAndConditionsText || ""}
-                                onChange={(e) => handleChange("termsAndConditionsText", e.target.value)}
+                                value={tVal("termsAndConditionsText")}
+                                onChange={tChange("termsAndConditionsText")}
                                 className="w-full border p-2 rounded h-40 text-gray-900 bg-white focus:ring-2 focus:ring-gec-orange outline-none"
-                                placeholder="შეფასების გასაგრძელებლად გთხოვთ გაეცნოთ წესებსა და პირობებს და დაეთანხმოთ მათ."
+                                placeholder="Please review and agree to the terms and conditions to continue with the assessment."
                             />
                             <p className="text-xs text-gray-500 mt-1">
-                                Users must click &quot;ვეთანხმები&quot; (I agree) to this text before the survey questions appear.
+                                Users must click &quot;I Agree&quot; to this text before the survey questions appear.
                             </p>
                         </div>
                     </div>
@@ -324,8 +336,8 @@ export default function GlobalSettingsManager() {
                         <div>
                             <label className="block text-sm font-medium mb-1 text-gray-700">Results Page Title</label>
                             <input
-                                value={settings.resultPageTitle || ""}
-                                onChange={(e) => handleChange("resultPageTitle", e.target.value)}
+                                value={tVal("resultPageTitle")}
+                                onChange={tChange("resultPageTitle")}
                                 className="w-full border p-2 rounded text-gray-900 bg-white focus:ring-2 focus:ring-gec-orange outline-none"
                             />
                         </div>
@@ -334,56 +346,56 @@ export default function GlobalSettingsManager() {
                             <div>
                                 <label className="block text-sm font-medium mb-1 text-gray-700">Label: Organization</label>
                                 <input
-                                    value={settings.resultOrganizationLabel || ""}
-                                    onChange={(e) => handleChange("resultOrganizationLabel", e.target.value)}
+                                    value={tVal("resultOrganizationLabel")}
+                                    onChange={tChange("resultOrganizationLabel")}
                                     className="w-full border p-2 rounded text-gray-900 bg-white focus:ring-2 focus:ring-gec-orange outline-none"
                                 />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1 text-gray-700">Label: Score</label>
                                 <input
-                                    value={settings.resultScoreLabel || ""}
-                                    onChange={(e) => handleChange("resultScoreLabel", e.target.value)}
+                                    value={tVal("resultScoreLabel")}
+                                    onChange={tChange("resultScoreLabel")}
                                     className="w-full border p-2 rounded text-gray-900 bg-white focus:ring-2 focus:ring-gec-orange outline-none"
                                 />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1 text-gray-700">Button: Individual Report</label>
                                 <input
-                                    value={settings.resultPersonalReportBtn || ""}
-                                    onChange={(e) => handleChange("resultPersonalReportBtn", e.target.value)}
+                                    value={tVal("resultPersonalReportBtn")}
+                                    onChange={tChange("resultPersonalReportBtn")}
                                     className="w-full border p-2 rounded text-gray-900 bg-white focus:ring-2 focus:ring-gec-orange outline-none"
                                 />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1 text-gray-700">Button: Company Report</label>
                                 <input
-                                    value={settings.resultCompanyReportBtn || ""}
-                                    onChange={(e) => handleChange("resultCompanyReportBtn", e.target.value)}
+                                    value={tVal("resultCompanyReportBtn")}
+                                    onChange={tChange("resultCompanyReportBtn")}
                                     className="w-full border p-2 rounded text-gray-900 bg-white focus:ring-2 focus:ring-gec-orange outline-none"
                                 />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1 text-gray-700">Button: Download PDF</label>
                                 <input
-                                    value={settings.resultDownloadBtnText || ""}
-                                    onChange={(e) => handleChange("resultDownloadBtnText", e.target.value)}
+                                    value={tVal("resultDownloadBtnText")}
+                                    onChange={tChange("resultDownloadBtnText")}
                                     className="w-full border p-2 rounded text-gray-900 bg-white focus:ring-2 focus:ring-gec-orange outline-none"
                                 />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1 text-gray-700">Button: Restart</label>
                                 <input
-                                    value={settings.resultRestartBtnText || ""}
-                                    onChange={(e) => handleChange("resultRestartBtnText", e.target.value)}
+                                    value={tVal("resultRestartBtnText")}
+                                    onChange={tChange("resultRestartBtnText")}
                                     className="w-full border p-2 rounded text-gray-900 bg-white focus:ring-2 focus:ring-gec-orange outline-none"
                                 />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1 text-gray-700">Text: No Data</label>
                                 <input
-                                    value={settings.resultNoDataText || ""}
-                                    onChange={(e) => handleChange("resultNoDataText", e.target.value)}
+                                    value={tVal("resultNoDataText")}
+                                    onChange={tChange("resultNoDataText")}
                                     className="w-full border p-2 rounded text-gray-900 bg-white focus:ring-2 focus:ring-gec-orange outline-none"
                                 />
                             </div>
@@ -395,24 +407,24 @@ export default function GlobalSettingsManager() {
                                 <div>
                                     <label className="block text-sm font-medium mb-1 text-gray-700">Label: Essence</label>
                                     <input
-                                        value={settings.phaseEssenceLabel || ""}
-                                        onChange={(e) => handleChange("phaseEssenceLabel", e.target.value)}
+                                        value={tVal("phaseEssenceLabel")}
+                                        onChange={tChange("phaseEssenceLabel")}
                                         className="w-full border p-2 rounded text-gray-900 bg-white focus:ring-2 focus:ring-gec-orange outline-none"
                                     />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium mb-1 text-gray-700">Label: Characteristics</label>
                                     <input
-                                        value={settings.phaseCharacteristicsLabel || ""}
-                                        onChange={(e) => handleChange("phaseCharacteristicsLabel", e.target.value)}
+                                        value={tVal("phaseCharacteristicsLabel")}
+                                        onChange={tChange("phaseCharacteristicsLabel")}
                                         className="w-full border p-2 rounded text-gray-900 bg-white focus:ring-2 focus:ring-gec-orange outline-none"
                                     />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium mb-1 text-gray-700">Label: Focus</label>
                                     <input
-                                        value={settings.phaseFocusLabel || ""}
-                                        onChange={(e) => handleChange("phaseFocusLabel", e.target.value)}
+                                        value={tVal("phaseFocusLabel")}
+                                        onChange={tChange("phaseFocusLabel")}
                                         className="w-full border p-2 rounded text-gray-900 bg-white focus:ring-2 focus:ring-gec-orange outline-none"
                                     />
                                 </div>
@@ -425,10 +437,10 @@ export default function GlobalSettingsManager() {
                                 <div>
                                     <label className="block text-sm font-medium mb-1 text-gray-700">Booking Text</label>
                                     <textarea
-                                        value={settings.bookingText || ""}
-                                        onChange={(e) => handleChange("bookingText", e.target.value)}
+                                        value={tVal("bookingText")}
+                                        onChange={tChange("bookingText")}
                                         className="w-full border p-2 rounded h-24 text-gray-900 bg-white focus:ring-2 focus:ring-gec-orange outline-none"
-                                        placeholder="თუ გსურთ დამატებითი განხილვა GEC-ის გუნდთან..."
+                                        placeholder="If you would like a further discussion with the GEC team..."
                                     />
                                 </div>
                                 <div>

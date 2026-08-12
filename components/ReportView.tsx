@@ -1,5 +1,8 @@
+"use client";
+
 import React from 'react';
 import * as icons from 'lucide-react';
+import { useDictionary } from "@/lib/i18n/LocaleProvider";
 
 // Helper to render icon by string name
 const DynamicIcon = ({ name, className }: { name: string, className?: string }) => {
@@ -39,6 +42,8 @@ export default function ReportView({ phaseData, labels }: {
     labels?: { essence?: string; focus?: string; }
 }) {
     // phaseData comes from the DB (PhaseConfig)
+    const dict = useDictionary();
+    const rv = dict.reportView;
 
     return (
         <div className="max-w-7xl mx-auto bg-white min-h-screen font-sans">
@@ -46,8 +51,8 @@ export default function ReportView({ phaseData, labels }: {
             {/* --- HEADER --- */}
             <div className="bg-[#153749] text-white p-6 md:p-12 text-center rounded-t-3xl relative overflow-hidden">
                 <div className="relative z-10">
-                    <h2 className="text-lg md:text-2xl opacity-80 mb-2">თქვენი ორგანიზაციის ბიზნეს პროცესების სიმწიფის შეფასება:</h2>
-                    <h1 className="text-3xl md:text-5xl font-bold text-[#F05324] mb-4">ფაზა {phaseData.id}: {phaseData.title}</h1>
+                    <h2 className="text-lg md:text-2xl opacity-80 mb-2">{rv.subheading}</h2>
+                    <h1 className="text-3xl md:text-5xl font-bold text-[#F05324] mb-4">{rv.phaseHeading(phaseData.id)} {phaseData.title}</h1>
                     <p className="text-sm md:text-xl uppercase tracking-widest text-[#049978] mb-8">{phaseData.subtitle}</p>
 
                     {/* Main Phase Icon */}
@@ -64,7 +69,7 @@ export default function ReportView({ phaseData, labels }: {
                 <div className="bg-orange-50 p-6 md:p-8 rounded-2xl border border-orange-100">
                     <h3 className="text-[#F05324] font-bold uppercase tracking-wider mb-4 flex items-center gap-2">
                         <span className="p-2 bg-[#F05324] text-white rounded-lg"><DynamicIcon name="Target" className="w-4 h-4" /></span>
-                        {labels?.essence || "არსი (Essence)"}
+                        {labels?.essence || dict.phaseLabels.essence}
                     </h3>
                     <p className="text-gray-700 text-base md:text-lg leading-relaxed font-medium break-words">
                         {phaseData.essence}
@@ -73,7 +78,7 @@ export default function ReportView({ phaseData, labels }: {
                 <div className="bg-teal-50 p-6 md:p-8 rounded-2xl border border-teal-100">
                     <h3 className="text-[#049978] font-bold uppercase tracking-wider mb-4 flex items-center gap-2">
                         <span className="p-2 bg-[#049978] text-white rounded-lg"><DynamicIcon name="Crosshair" className="w-4 h-4" /></span>
-                        {labels?.focus || "ფოკუსი (Focus)"}
+                        {labels?.focus || dict.phaseLabels.focus}
                     </h3>
                     <p className="text-gray-700 text-base md:text-lg leading-relaxed font-medium break-words">
                         {phaseData.focus}
@@ -84,7 +89,7 @@ export default function ReportView({ phaseData, labels }: {
             {/* --- SECTION 1: What this phase means --- */}
             <div className="p-6 md:p-12 bg-gray-50">
                 <h3 className="text-2xl md:text-3xl font-bold text-[#153749] mb-8 text-center">
-                    რას ნიშნავს ფაზა {phaseData.id}?
+                    {rv.meaningHeading(phaseData.id)}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
                     {phaseData.meaningPoints && phaseData.meaningPoints.map((point, idx) => (
@@ -105,26 +110,26 @@ export default function ReportView({ phaseData, labels }: {
             {/* --- SECTION 2: How it manifests (3 Columns from PDF Page 6) --- */}
             <div className="p-6 md:p-12">
                 <h3 className="text-2xl md:text-3xl font-bold text-[#153749] mb-8 text-center">
-                    როგორ ვლინდება ეს თქვენი ორგანიზაციის საქმიანობაში?
+                    {rv.manifestHeading}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-0 rounded-2xl overflow-hidden shadow-xl">
                     {/* Column 1: Strategy */}
                     <div className="bg-[#F05324] p-6 md:p-8 text-white">
-                        <h4 className="font-bold text-lg md:text-xl mb-4 text-center border-b border-white/30 pb-4">სტრატეგია და პროცესები</h4>
+                        <h4 className="font-bold text-lg md:text-xl mb-4 text-center border-b border-white/30 pb-4">{rv.columnStrategy}</h4>
                         <ul className="space-y-4 list-disc pl-5">
                             {phaseData.manifestation?.strategy?.map((item, i) => <li key={i} className="break-words">{item}</li>)}
                         </ul>
                     </div>
                     {/* Column 2: Leadership */}
                     <div className="bg-[#153749] p-6 md:p-8 text-white">
-                        <h4 className="font-bold text-lg md:text-xl mb-4 text-center border-b border-white/30 pb-4">ბიზნეს პროცესები</h4>
+                        <h4 className="font-bold text-lg md:text-xl mb-4 text-center border-b border-white/30 pb-4">{rv.columnLeadership}</h4>
                         <ul className="space-y-4 list-disc pl-5">
                             {phaseData.manifestation?.leadership?.map((item, i) => <li key={i} className="break-words">{item}</li>)}
                         </ul>
                     </div>
                     {/* Column 3: Processes */}
                     <div className="bg-[#049978] p-6 md:p-8 text-white">
-                        <h4 className="font-bold text-lg md:text-xl mb-4 text-center border-b border-white/30 pb-4">ხარისხი და შედეგები</h4>
+                        <h4 className="font-bold text-lg md:text-xl mb-4 text-center border-b border-white/30 pb-4">{rv.columnProcesses}</h4>
                         <ul className="space-y-4 list-disc pl-5">
                             {phaseData.manifestation?.processes?.map((item, i) => <li key={i} className="break-words">{item}</li>)}
                         </ul>
@@ -135,7 +140,7 @@ export default function ReportView({ phaseData, labels }: {
             {/* --- SECTION 3: Challenges (PDF Page 6 Bottom) --- */}
             <div className="p-6 md:p-12 bg-gray-50">
                 <h3 className="text-2xl md:text-3xl font-bold text-[#F05324] mb-8">
-                    რა არის ტიპური გამოწვევები ამ ფაზაში?
+                    {rv.challengesHeading}
                 </h3>
                 <div className="space-y-6">
                     {phaseData.challenges && phaseData.challenges.map((challenge, idx) => (
@@ -156,7 +161,7 @@ export default function ReportView({ phaseData, labels }: {
             {phaseData.benefits && phaseData.benefits.length > 0 && (
                 <div className="p-6 md:p-12">
                     <h3 className="text-2xl md:text-3xl font-bold text-[#153749] mb-8 text-center">
-                        რა დადებით შედეგებს მოგვიტანს განვითარების შემდეგ ეტაპზე გადასვლა?
+                        {rv.benefitsHeading}
                     </h3>
                     <div className="space-y-6 max-w-4xl mx-auto">
                         {phaseData.benefits.map((benefit, idx) => {

@@ -6,7 +6,7 @@ const WhyMatters = ({ items, title }: { items: any[], title?: string }) => {
         <section className="py-12 relative z-10 w-full">
             <div className="max-w-6xl mx-auto px-4">
                 <h2 className="text-3xl font-bold text-center text-white mb-12">
-                    {title || "რატომ არის ეს მნიშვნელოვანი?"}
+                    {title || "Why does this matter?"}
                 </h2>
                 <div className="flex flex-wrap justify-center gap-6">
                     {items.map((item) => {

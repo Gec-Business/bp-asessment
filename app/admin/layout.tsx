@@ -4,8 +4,34 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { Users, Settings, LogOut, LayoutDashboard, FileText, HelpCircle, ShieldAlert, Building, Eye } from "lucide-react";
+import { ContentLocaleProvider, useContentLocale } from "@/lib/i18n/ContentLocaleContext";
 
-export default function AdminLayout({
+function ContentLocaleToggle() {
+    const { contentLocale, setContentLocale } = useContentLocale();
+    return (
+        <div className="px-4 pb-4">
+            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Editing content in</p>
+            <div className="flex items-center gap-1 rounded-lg border border-gray-200 dark:border-gray-700 p-1 text-sm font-semibold">
+                <button
+                    type="button"
+                    onClick={() => setContentLocale("en")}
+                    className={`flex-1 px-3 py-1.5 rounded-md transition-colors ${contentLocale === "en" ? "bg-[#F05324] text-white" : "text-gray-500 hover:text-gray-900 dark:hover:text-white"}`}
+                >
+                    English
+                </button>
+                <button
+                    type="button"
+                    onClick={() => setContentLocale("ka")}
+                    className={`flex-1 px-3 py-1.5 rounded-md transition-colors ${contentLocale === "ka" ? "bg-[#F05324] text-white" : "text-gray-500 hover:text-gray-900 dark:hover:text-white"}`}
+                >
+                    Georgian
+                </button>
+            </div>
+        </div>
+    );
+}
+
+function AdminLayoutInner({
     children,
 }: {
     children: React.ReactNode;
@@ -53,6 +79,8 @@ export default function AdminLayout({
                     })}
                 </nav>
 
+                <ContentLocaleToggle />
+
                 <div className="p-4 border-t border-gray-200 dark:border-gray-700">
                     <button
                         onClick={() => signOut({ callbackUrl: "/login" })}
@@ -69,5 +97,13 @@ export default function AdminLayout({
                 {children}
             </main>
         </div>
+    );
+}
+
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+    return (
+        <ContentLocaleProvider>
+            <AdminLayoutInner>{children}</AdminLayoutInner>
+        </ContentLocaleProvider>
     );
 }

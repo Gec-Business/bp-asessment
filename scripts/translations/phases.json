@@ -1,0 +1,245 @@
+{
+  "phases": [
+    {
+      "id": 1,
+      "title": "Initial",
+      "subtitle": "Reactive",
+      "essence": "The first steps from chaos toward order: spontaneity, constant 'firefighting,' informal processes, and a short-term outlook.",
+      "focus": "Day-to-day survival and reacting to immediate problems.",
+      "recommendations": "Start by documenting processes and clarifying roles. Create a simple, short-term action plan.",
+      "characteristics": [],
+      "challenges": [
+        { "title": "Unclear Direction", "desc": "It is difficult to understand where the organization is headed in the long term.", "icon": "ArrowLeftRightIcon" },
+        { "title": "Inconsistent Results", "desc": "Results are sometimes good and sometimes not. It is difficult to determine the underlying causes.", "icon": "LucideTrendingDown" },
+        { "title": "Employee Burnout", "desc": "Constant 'firefighting' mode and heavy reliance on specific individuals can lead to employee burnout.", "icon": "LucideAngry" },
+        { "icon": "LineChart", "title": "Stalled Growth", "desc": "Expanding the business is impossible under conditions of chaos." },
+        { "icon": "Banknote", "title": "Inefficient Use of Resources", "desc": "Human and non-human resources (time, money) may be spent on less important matters." },
+        { "icon": "AlarmClockIcon", "title": "Delayed Response to New Developments", "desc": "It is difficult to adapt quickly to market changes when you are constantly consumed by ongoing problems." }
+      ],
+      "meaningPoints": [
+        { "title": "No Process Culture", "desc": "There is no established process culture. Processes are undocumented, informal, and inconsistent.", "icon": "BadgeHelp" },
+        { "title": "Focus on Short-Term Results", "desc": "The main concern is keeping current operations running and solving immediate problems.", "icon": "Atom" },
+        { "title": "Daily 'Firefighting'", "desc": "Work is carried out based on whatever need arises — that is, reactively and spontaneously.", "icon": "FireExtinguisher" },
+        { "title": "Success Dependent on Individuals", "desc": "You may have 'heroes' whose knowledge and experience success depends on, while a systematic approach remains underdeveloped.", "icon": "HandMetalIcon" },
+        { "icon": "AlignCenter", "title": "'Broken Bridges' Between Departments", "desc": "Departments work in isolation, and functional gaps are common. There is no single person responsible for the entire process (a 'process owner'). When problems arise, departments blame one another." },
+        { "icon": "LucideScreenShareOff", "title": "Lack of Proper Communication", "desc": "There is no shared understanding of how work is carried out. Employees do not feel engaged and do not clearly understand what strategic goals the organization's activities serve." },
+        { "icon": "AlertCircle", "title": "Frequent Operational Failures", "desc": "Root cause analysis of problems is not performed. As a result, problems recur." },
+        { "icon": "BookAudio", "title": "Knowledge and Experience Are Hard to Retain in the Organization", "desc": "An employee's knowledge and experience are their personal asset, not the organization's. If they leave, the knowledge leaves with them. No knowledge transfer takes place." },
+        { "icon": "ActivityIcon", "title": "Stability Problems", "desc": "Lack of standardization and chaotic operational behavior lead to inconsistent results and low quality." }
+      ],
+      "benefits": [
+        { "color": "yellow", "title": "Predictable Results", "desc": "Quality is guaranteed rather than accidental; fewer errors." },
+        { "color": "green", "title": "Easy Onboarding", "desc": "New employees get up to speed quickly." },
+        { "color": "red", "title": "Less Stress", "desc": "More time for strategic goals, less time spent firefighting." },
+        { "color": "green", "title": "Growth Without Chaos", "desc": "Systems that can withstand increased workload." }
+      ],
+      "manifestation": {
+        "strategy": [
+          "Strategy is typically not formalized in a documented form.",
+          "Goals, if they exist, are not communicated to employees.",
+          "The business processes used to achieve strategic goals are not defined."
+        ],
+        "leadership": [
+          "Work processes are not standardized or documented. Results often depend on the knowledge and experience of individual employees.",
+          "There is no 'process owner.'",
+          "Roles and responsibilities may be unclear."
+        ],
+        "processes": [
+          "Lack of standardization leads to low quality.",
+          "Decisions are made quickly, without in-depth analysis.",
+          "When five people perform the same task in five different ways, quality control and root-cause analysis of problems become impossible."
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "title": "Developing",
+      "subtitle": "Basic and Repeatable",
+      "essence": "Repeating Success and Building First Structures: forming core processes and replicating successful practices.",
+      "focus": "Achieving stability, streamlining core operations, and strengthening functional capabilities.",
+      "recommendations": "Standardize core processes. Implement regular meetings and reporting.",
+      "characteristics": [],
+      "challenges": [
+        { "title": "Standardization", "desc": "Company-wide control mechanisms need to be established and business processes documented.", "icon": "BookCheckIcon" },
+        { "title": "Siloed Improvement", "desc": "Without a cross-functional view, individual improvements may turn out to be entirely unproductive.", "icon": "HandshakeIcon" },
+        { "title": "Fear of or Resistance to Change", "desc": "Once a routine has taken hold, employees may find it difficult to adopt new approaches.", "icon": "LucideRefreshCcw" },
+        { "icon": "Anchor", "title": "Stalled Growth", "desc": "Success is attributable to specific departments rather than to a unified system." },
+        { "icon": "LucideMessageCircleX", "title": "Ineffective Communication", "desc": "Information is exchanged informally, is inconsistent, and carries a high risk of errors and delays." },
+        { "icon": "Apple", "title": "Inefficient Use of Resources", "desc": "Human and non-human resources (time, money) may be spent on less important matters." }
+      ],
+      "meaningPoints": [
+        { "title": "Process Culture Is Improving", "desc": "Some processes may be well-established and documented, but the organization lacks a unified, cross-functional approach.", "icon": "Building2" },
+        { "title": "Cross-Functional Gaps", "desc": "When work passes from one department to another, information gets lost or delayed because no one is responsible for the entire process chain.", "icon": "UnlinkIcon" },
+        { "title": "Siloed Optimization", "desc": "Automating processes in one department, without optimizing processes in the next department in the chain, can create a so-called 'bottleneck.'", "icon": "GitPullRequestArrowIcon" },
+        { "title": "Stability Problem", "desc": "Lack of standardization and documenting processes from a narrow departmental perspective leads to inconsistent results and low quality.", "icon": "LucideMap" },
+        { "icon": "LucideHandCoins", "title": "Success Dependent on Specific Departments and Teams", "desc": "The smooth functioning of processes is often attributable to specific departments or teams." },
+        { "icon": "Copy", "title": "Data Duplication and Risk of Errors", "desc": "Entering the same information into the system multiple times causes errors and creates informational chaos." },
+        { "icon": "MessagesSquareIcon", "title": "Lack of Proper Communication", "desc": "Information is exchanged between departments informally, leading to inconsistency and errors." },
+        { "icon": "DatabaseZapIcon", "title": "No Unified Process Repository", "desc": "Departments often keep their own versions of process maps. There is no central, agreed-upon, comprehensive, and unified view of the stability problem." },
+        { "icon": "BookCopy", "title": "Knowledge and Experience Sharing", "desc": "Successful approaches may be passed on verbally, but formal knowledge-management systems do not exist." }
+      ],
+      "benefits": [
+        { "color": "yellow", "title": "Unified Standard", "desc": "A single repository of documented processes accessible to all employees. Every employee will know exactly their role and be accountable for the work performed." },
+        { "color": "green", "title": "Systematic Approach", "desc": "Processes will become transparent and less dependent on specific individuals. The number of errors will decrease sharply." },
+        { "color": "yellow", "title": "Predictable Results", "desc": "By repeating successful processes, service quality will increase and customer satisfaction will improve." },
+        { "color": "green", "title": "Greater Growth Potential", "desc": "Controlled systems can withstand increased workload." }
+      ],
+      "manifestation": {
+        "strategy": [
+          "Short-term plans may exist for individual departments.",
+          "Strategic goals are often not shared with employees.",
+          "Process success may still depend on the experience of specific departments rather than stemming from the company's strategic goals."
+        ],
+        "leadership": [
+          "Some processes are documented, but only from the narrow perspective of a single department.",
+          "Certain rules are beginning to emerge. Similar tasks are performed using similar methods. Basic controls exist.",
+          "Roles and responsibilities may be unclear."
+        ],
+        "processes": [
+          "Not all core business processes are standardized, and boundaries between functions are not clearly defined. Overlaps are common.",
+          "Decisions are made quickly, without in-depth analysis.",
+          "Lack of standardization often affects quality."
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "title": "Defined",
+      "subtitle": "Structured and Proactive",
+      "essence": "Formal Systems and Control: documented strategy and processes, proactive planning.",
+      "focus": "Standardizing processes, establishing structure, and proactive planning.",
+      "recommendations": "Focus on measuring efficiency. Begin implementing KPIs and continuously monitoring results.",
+      "characteristics": [],
+      "challenges": [
+        { "title": "Standardization Is a Beginning, Not an End", "desc": "Standardization is necessary, but it is not a guarantee of success. Success depends on how 'alive' the system remains.", "icon": "Award" },
+        { "title": "'Passive' State of Processes", "desc": "Processes may be documented but not actively used to measure, manage, or improve the work performed.", "icon": "NotebookPenIcon" },
+        { "title": "Project-Based Management", "desc": "A process owner either does not exist or is tied to only a certain part of the process. No specific person is designated as responsible for the overall 'health' of the process.", "icon": "Album" },
+        { "icon": "FileWarning", "title": "Stalled Growth", "desc": "A lack of adaptation to market challenges can slow growth, decision-making, and innovation." },
+        { "icon": "FrameIcon", "title": "Delayed Response to New Developments", "desc": "It is difficult to adapt quickly to market changes when you are constantly consumed by ongoing problems." }
+      ],
+      "meaningPoints": [
+        { "title": "Process Culture Is Established", "desc": "A stable operating system is in place, where core processes appear to be documented, consistent, and visible across the entire organization.", "icon": "BookKeyIcon" },
+        { "title": "A Single Source of 'Truth'", "desc": "A central process repository likely exists — a digital library or database — that consolidates process models, describes process workflows, standard operating procedures, and from which these processes are managed.", "icon": "Goal" },
+        { "title": "Independence", "desc": "The system relies less on the individual knowledge of specific people and more on documented rules.", "icon": "AlignVerticalJustifyCenter" },
+        { "title": "Quality Control", "desc": "A standardized process architecture ensures quality control and preserves knowledge within the organization.", "icon": "LucideWorkflow" },
+        { "icon": "LucideNetwork", "title": "Roles and Responsibilities", "desc": "Employees know their tasks and to whom they are accountable." },
+        { "icon": "BookOpenText", "title": "Strategic Planning", "desc": "You have a developed and documented strategic plan that includes clear goals, objectives, and possibly key initiatives as well." },
+        { "icon": "Album", "title": "Process Culture", "desc": "There is a shared understanding of core processes within the organization. All key stakeholders agree on process flows, how they interact, and what value they aim to create." },
+        { "icon": "ArrowUpWideNarrow", "title": "Training and Development", "desc": "Development programs may exist for employees so they can carry out standardized processes effectively." }
+      ],
+      "benefits": [
+        { "color": "yellow", "title": "Predictable Results", "desc": "Determining process effectiveness and making decisions will be based on analyzed data. As a result, process quality control will become possible through statistical methods." },
+        { "color": "green", "title": "More Accountability, Fewer Errors", "desc": "Introducing a 'process owner' role, responsible for the overall 'health' of the process, will help reduce errors." },
+        { "color": "red", "title": "'Active' Systems", "desc": "Systems that adapt easily to their environment and challenges, and can withstand increased workload." },
+        { "color": "green", "title": "Software Systems", "desc": "A unified digital management space will be created, where data is centralized and automated." }
+      ],
+      "manifestation": {
+        "strategy": [
+          "A formal, documented strategic plan exists and is reviewed regularly.",
+          "Strategic goals are known at lower levels as well, though not fully.",
+          "Not all operational/organizational goals may be aligned with the strategy."
+        ],
+        "leadership": [
+          "A stable operating system is in place, and processes are documented and consistent.",
+          "A 'process owner' either does not exist, or the role is temporary and tied to a specific project.",
+          "Processes are often monitored only during projects, rather than being managed on an ongoing basis."
+        ],
+        "processes": [
+          "The business environment and customer behavior change, while documented processes remain unchanged.",
+          "Without active updating, processes become outdated and misaligned with strategy."
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "title": "Managed",
+      "subtitle": "Compliant and Measurable",
+      "essence": "Integrating Strategy and Measuring Results: deep integration of strategy, continuous monitoring of results (KPIs).",
+      "focus": "Achieving strategic goals, measuring efficiency, and optimization.",
+      "recommendations": "Encourage innovation. Give employees more freedom in how they achieve results.",
+      "characteristics": [],
+      "challenges": [
+        { "title": "Transforming From Control to Innovation", "desc": "A mechanism focused on continuous improvement and innovation must be established.", "icon": "LucideRefreshCcwDot" },
+        { "title": "Slowing Down of Innovation", "desc": "The system resists deviations, even when a deviation represents potential innovation.", "icon": "Frame" },
+        { "title": "Risk-Averse Culture", "desc": "Instead of implementing necessary, large, and radical changes, preference is often given to small, incremental changes.", "icon": "BookmarkX" },
+        { "icon": "LucideSmile", "title": "A Sense of Complacency", "desc": "Achieved success can breed complacency, which hinders the drive for further development." },
+        { "icon": "DatabaseZap", "title": "Data Overload", "desc": "Waiting for data processing can slow down decision-making time." },
+        { "icon": "BarChart3", "title": "Stalled Growth", "desc": "Success is attributable to specific departments or teams rather than to a unified system." }
+      ],
+      "meaningPoints": [
+        { "title": "Process Culture Is Strong", "desc": "Core processes are standardized and are actively measured, evaluated, and controlled using quantitative data.", "icon": "AirplayIcon" },
+        { "title": "KPI System", "desc": "Effectiveness is measured using specific, measurable indicators.", "icon": "Database" },
+        { "title": "Clear Process Ownership", "desc": "Each core process has its own process owner with precisely defined responsibility and accountability.", "icon": "LucideGoal" },
+        { "title": "Monitoring Process Health", "desc": "When deviations occur, they are quickly identified, and root cause analysis is conducted to correct the situation immediately.", "icon": "LucideScanEye" },
+        { "icon": "Focus", "title": "Focus on Stability and Quality", "desc": "Process performance is stable, and sources of variation are understood and managed. The organization can reliably predict process outcomes, such as cycle time, costs, and quality level." },
+        { "icon": "AlignCenterVertical", "title": "Operational Stability and Predictability", "desc": "Quantitative data and statistical methods are used to manage processes." },
+        { "icon": "AreaChartIcon", "title": "Data-Driven Decision-Making", "desc": "Decisions are based on facts and data rather than intuition or unsubstantiated claims." }
+      ],
+      "benefits": [
+        { "color": "green", "title": "Innovative Culture and Easy Adaptation", "desc": "Even under strict control, innovation must be encouraged so you can continuously respond to market demands and easily adapt to new requirements." },
+        { "color": "green", "title": "Growth and Development", "desc": "When an organization responds to challenges and keeps pace with technological development, the business grows and evolves." }
+      ],
+      "manifestation": {
+        "strategy": [
+          "The strategic plan is regularly updated and adapted to the changing environment.",
+          "Strategic goals are communicated to employees at every level of the organization.",
+          "Core business processes are directly aligned with strategic goals."
+        ],
+        "leadership": [
+          "Processes are not only standardized but their effectiveness is also regularly evaluated.",
+          "A robust process management system is established, with clear ownership and accountability."
+        ],
+        "processes": [
+          "High quality is guaranteed under conditions of standardization and continuous monitoring.",
+          "Under standardized conditions, deviations are quickly identified, root causes are thoroughly analyzed, and appropriate measures are taken.",
+          "Decisions are made based on data."
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "title": "Optimized",
+      "subtitle": "Adaptive and Continuously Improving",
+      "essence": "Continuous Refinement and Shaping the Future: continuous improvement, an innovative culture, and high adaptability.",
+      "focus": "Innovation, learning, adaptation, proactively shaping the future, and sustainable development.",
+      "recommendations": "Maintain your leadership position. Share knowledge with the industry and help shape the future.",
+      "characteristics": [],
+      "challenges": [
+        { "title": "Complacency", "desc": "Amid achieved success, it is important not to lose vigilance and to continually seek new ways to improve and innovative approaches.", "icon": "UserPlus" },
+        { "title": "Risk-Averse Culture", "desc": "Genuine strategic transformation often requires shifting significant resources away from the successful core business to fund new, unproven, and potentially risky ventures.", "icon": "LucideShieldAlert" },
+        { "title": "Strong Leaders' Comfort Zone", "desc": "An organization's success creates powerful internal leaders and business units who feel comfortable with the existing business model and do not want to change it.", "icon": "LucideSofa" },
+        { "icon": "BatteryFullIcon", "title": "Slowing Down of Innovation", "desc": "An organization can become so proficient at executing its current, successful business model that it fails to notice, or cannot effectively respond to, innovative changes in the market and products coming from competitors who play by different rules." }
+      ],
+      "meaningPoints": [
+        { "title": "Focus on Continuous Improvement", "desc": "Improvement is a cultural norm, not a one-time initiative. Gaps are corrected automatically and proactively.", "icon": "Lightbulb" },
+        { "title": "Mature Process Culture", "desc": "Processes are documented, actively measured, evaluated, controlled, and adapted quickly and precisely to changing market demands.", "icon": "Brain" },
+        { "title": "Continuous Improvement and Innovation", "desc": "The focus has moved beyond simple efficiency toward encouraging innovative approaches, so that process capabilities are used to their fullest to create new forms of customer value.", "icon": "LucideTrendingUp" },
+        { "title": "Customer Orientation", "desc": "The organization continuously analyzes feedback and looks for ways to deliver new, high-quality services and products to customers.", "icon": "BookMarked" },
+        { "icon": "Dna", "title": "Strategic Agility", "desc": "The organization has an established, sustainable approach to process monitoring and a system for controlling and analyzing feedback, which allows it to continuously adapt to new challenges and develop." },
+        { "icon": "ArrowBigRightDash", "title": "The Organization Proactively Shapes the Future", "desc": "Entering the same information into the system multiple times causes errors and creates informational chaos." },
+        { "icon": "AwardIcon", "title": "Powerful Leaders", "desc": "An organization's success creates powerful internal leaders and business units who feel comfortable with the existing business model. Any change may be perceived as a threat to their power." },
+        { "icon": "BookLockIcon", "title": "Siloed Information", "desc": "Automating processes in one department, without optimizing the next link in the chain, can create a so-called 'bottleneck.'" }
+      ],
+      "benefits": [
+        { "color": "green", "title": "Innovative Culture and Easy Adaptation", "desc": "Use advanced technologies so the business continuously develops and maintains its leading position." },
+        { "color": "red", "title": "Growth and Development", "desc": "Do not settle for your achievements. Continuously seek out new opportunities and technological advances. Only then will you be able to sustain growth and maintain market leadership." },
+        { "color": "yellow", "title": "Bold Steps", "desc": "Fund new and potentially risky ventures." }
+      ],
+      "manifestation": {
+        "strategy": [
+          "The strategic plan is regularly updated and adapted to the changing environment.",
+          "The organization actively seeks out and creates new strategic opportunities.",
+          "Existing processes are improved to encourage strategic transformation."
+        ],
+        "leadership": [
+          "Processes are not only optimized but are also continuously evaluated and changed in innovative ways.",
+          "Advanced technologies and innovative approaches are used to improve processes, so the business continuously develops, responds to the challenges of the modern environment, and maintains its leading position in its field."
+        ],
+        "processes": [
+          "Process monitoring and the feedback system drive high quality.",
+          "The organization's well-managed processes, flexible technology platforms, and process culture enable it to pivot toward new opportunities."
+        ]
+      }
+    }
+  ]
+}

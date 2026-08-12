@@ -5,9 +5,11 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Mail, Lock } from "lucide-react";
+import { useDictionary } from "@/lib/i18n/LocaleProvider";
 
 export default function MyReportPage() {
     const router = useRouter();
+    const dict = useDictionary().myReport;
     const [step, setStep] = useState<'email' | 'otp'>('email');
     const [email, setEmail] = useState("");
     const [otp, setOtp] = useState("");
@@ -42,11 +44,12 @@ export default function MyReportPage() {
 
             if (!res.ok) {
                 const data = await res.json().catch(() => ({}));
-                throw new Error(data.message || "Failed to send code");
+                if (data.error === "NotFound") throw new Error(dict.errorNotFound);
+                throw new Error(dict.errorSendFailed);
             }
             setStep('otp');
         } catch (err: any) {
-            setError(err.message || "ვერ მოხერხდა კოდის გაგზავნა. სცადეთ კვლავ.");
+            setError(err.message || dict.errorSendFailed);
         } finally {
             setLoading(false);
         }
@@ -68,7 +71,7 @@ export default function MyReportPage() {
             const data = await res.json();
 
             if (!res.ok) {
-                throw new Error(data.message || "Invalid code");
+                throw new Error(data.message || dict.errorInvalidCode);
             }
 
             // Note: The verify API currently returns { success: true }.
@@ -87,11 +90,11 @@ export default function MyReportPage() {
             } else {
                 // If API doesn't return leadId, we might be stuck.
                 // I will update the API route in the next step to return leadId.
-                setError("ანგარიში არ მოიძებნა.");
+                setError(dict.errorReportNotFound);
             }
 
         } catch (err: any) {
-            setError(err.message || "კოდი არასწორია.");
+            setError(err.message || dict.errorInvalidCode);
         } finally {
             if (!isNavigating) {
                 setLoading(false);
@@ -133,7 +136,7 @@ export default function MyReportPage() {
                     </div>
                     <Link href="/" className="text-sm font-medium text-white/80 hover:text-white flex items-center gap-2 transition-colors">
                         <ArrowLeft size={18} />
-                        მთავარზე დაბრუნება
+                        {dict.backToHome}
                     </Link>
                 </div>
             </header>
@@ -145,12 +148,12 @@ export default function MyReportPage() {
                             {step === 'email' ? <Mail className="text-[#F05324]" size={36} /> : <Lock className="text-[#F05324]" size={36} />}
                         </div>
                         <h1 className="text-3xl md:text-4xl font-bold text-[#002D40] mb-4">
-                            {step === 'email' ? 'ჩემი ანგარიშის ნახვა' : 'ვერიფიკაცია'}
+                            {step === 'email' ? dict.emailStepTitle : dict.otpStepTitle}
                         </h1>
                         <p className="text-gray-600 text-lg leading-relaxed">
                             {step === 'email'
-                                ? 'შეიყვანეთ თქვენი ელ. ფოსტა ანგარიშზე წვდომისთვის.'
-                                : `ჩვენ გამოგიგზავნეთ ერთჯერადი კოდი: ${email}`
+                                ? dict.emailStepSubtitle
+                                : dict.otpStepSubtitle(email)
                             }
                         </p>
                     </div>
@@ -164,7 +167,7 @@ export default function MyReportPage() {
                     <form onSubmit={step === 'email' ? checkEmail : verifyOtp} className="space-y-8">
                         {step === 'email' ? (
                             <div className="space-y-3">
-                                <label className="text-base font-semibold text-[#002D40] block ml-1">ელ. ფოსტა</label>
+                                <label className="text-base font-semibold text-[#002D40] block ml-1">{dict.emailLabel}</label>
                                 <div className="relative group">
                                     <div className="absolute left-4 top-4 text-gray-400 group-focus-within:text-[#F05324] transition-colors">
                                         <Mail size={22} />
@@ -200,7 +203,7 @@ export default function MyReportPage() {
                                     onClick={() => { setStep('email'); setError(null); }}
                                     className="text-sm font-medium text-gray-500 hover:text-[#F05324] transition-colors block mx-auto underline underline-offset-4"
                                 >
-                                    მეილის შეცვლა
+                                    {dict.changeEmail}
                                 </button>
                             </div>
                         )}
@@ -216,9 +219,9 @@ export default function MyReportPage() {
                                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                     </svg>
-                                    მუშავდება...
+                                    {dict.processing}
                                 </span>
-                            ) : (step === 'email' ? (requireOtp ? 'კოდის მიღება' : 'შედეგის ნახვა') : 'ანგარიშის ნახვა')}
+                            ) : (step === 'email' ? (requireOtp ? dict.submitGetCode : dict.submitViewResult) : dict.submitViewReport)}
                         </button>
                     </form>
                 </div>

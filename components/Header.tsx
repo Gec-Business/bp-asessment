@@ -3,11 +3,37 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 type Settings = {
     logoUrl: string;
     logoWidth?: number;
 };
+
+function LanguageSwitcher() {
+    const { locale, setLocale } = useLocale();
+
+    return (
+        <div className="flex items-center gap-1 rounded-full border border-gray-200 dark:border-gray-700 p-1 text-sm font-semibold">
+            <button
+                type="button"
+                onClick={() => setLocale("en")}
+                aria-pressed={locale === "en"}
+                className={`px-3 py-1 rounded-full transition-colors ${locale === "en" ? "bg-[#F05324] text-white" : "text-gray-500 hover:text-gray-900 dark:hover:text-white"}`}
+            >
+                EN
+            </button>
+            <button
+                type="button"
+                onClick={() => setLocale("ka")}
+                aria-pressed={locale === "ka"}
+                className={`px-3 py-1 rounded-full transition-colors ${locale === "ka" ? "bg-[#F05324] text-white" : "text-gray-500 hover:text-gray-900 dark:hover:text-white"}`}
+            >
+                KA
+            </button>
+        </div>
+    );
+}
 
 export default function Header({ initialSettings }: { initialSettings?: Settings }) {
     const [settings, setSettings] = useState<Settings>(initialSettings || {
@@ -28,8 +54,10 @@ export default function Header({ initialSettings }: { initialSettings?: Settings
 
     return (
         <header className="w-full flex justify-center md:justify-between items-center py-8 px-6 max-w-7xl mx-auto relative z-20">
-            {/* Spacer to balance logo */}
-            <div className="w-24 hidden md:block"></div>
+            {/* Language switcher: absolute on mobile so it doesn't disturb the centered logo, static spacer on desktop */}
+            <div className="absolute left-4 top-6 md:static md:w-24 md:flex md:items-center md:justify-start">
+                <LanguageSwitcher />
+            </div>
 
             <Link href="/" className="text-3xl font-bold tracking-tighter cursor-pointer">
                 {settings.logoUrl ? (

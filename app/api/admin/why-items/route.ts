@@ -21,12 +21,14 @@ export async function POST(req: NextRequest) {
 
     try {
         const body = await req.json();
-        const { title, description, icon, order } = body;
+        const { title, titleKa, description, descriptionKa, icon, order } = body;
 
         const newItem = await prisma.whyItem.create({
             data: {
                 title,
+                titleKa,
                 description,
+                descriptionKa,
                 icon,
                 order: parseInt(order)
             }
@@ -44,13 +46,15 @@ export async function PUT(req: NextRequest) {
 
     try {
         const body = await req.json();
-        const { id, title, description, icon, order } = body;
+        const { id, title, titleKa, description, descriptionKa, icon, order } = body;
 
         const updatedItem = await prisma.whyItem.update({
             where: { id },
             data: {
                 title,
+                titleKa,
                 description,
+                descriptionKa,
                 icon,
                 order: parseInt(order)
             }

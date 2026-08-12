@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
         if (!isNewLead && !existingLead) {
             return NextResponse.json({
                 error: "NotFound",
-                message: "ამ იმეილით კითხვარი ჯერ არ შევსებულა."
+                message: "No assessment has been completed with this email yet."
             }, { status: 404 });
         }
 

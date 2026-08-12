@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AlertCircle } from "lucide-react";
+import { useDictionary } from "@/lib/i18n/LocaleProvider";
 
 const PUBLIC_DOMAINS = [
     'gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com',
@@ -12,6 +13,7 @@ const PUBLIC_DOMAINS = [
 
 export default function LeadForm() {
     const router = useRouter();
+    const dict = useDictionary().leadForm;
     const [score, setScore] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [showDomainWarning, setShowDomainWarning] = useState(false);
@@ -117,7 +119,7 @@ export default function LeadForm() {
             setStep('otp');
         } catch (error) {
             console.error("OTP Send Error", error);
-            alert("ვერ მოხერხდა კოდის გაგზავნა. გთხოვთ სცადოთ თავიდან.");
+            alert(dict.otpSendError);
         }
     };
 
@@ -197,7 +199,7 @@ export default function LeadForm() {
         } catch (error: any) {
             if (error.message === "Email exists") return; // Handled in submit
             console.error("Verification Error", error);
-            alert(error.message || "კოდი არასწორია.");
+            alert(error.message || dict.otpInvalidError);
         }
     };
 
@@ -231,12 +233,12 @@ export default function LeadForm() {
     return (
         <div className="w-full max-w-md mx-auto bg-white dark:bg-gec-navy p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-gec-teal">
             <h2 className="text-2xl font-bold mb-6 text-gec-navy dark:text-white text-center">
-                {step === 'details' ? "თქვენი შედეგი მზად არის!" : "ვერიფიკაცია"}
+                {step === 'details' ? dict.resultReadyTitle : dict.verificationTitle}
             </h2>
             <p className="text-gray-500 text-center mb-8">
                 {step === 'details'
-                    ? "შეიყვანეთ საკონტაქტო მონაცემები სრული რეპორტის მისაღებად."
-                    : `ჩვენ გამოგიგზავნეთ ერთჯერადი კოდი მისამართზე: ${formData.email}`
+                    ? dict.detailsSubtitle
+                    : dict.otpSubtitle(formData.email)
                 }
             </p>
 
@@ -248,7 +250,7 @@ export default function LeadForm() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-1">
                                 <label className="text-sm font-medium text-gec-navy dark:text-gray-300">
-                                    სახელი <span className="text-red-500">*</span>
+                                    {dict.firstNameLabel} <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                     required
@@ -257,12 +259,12 @@ export default function LeadForm() {
                                     value={formData.firstName}
                                     onChange={handleChange}
                                     className="w-full rounded-lg border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 p-3 text-gec-navy dark:text-white placeholder-gray-400 focus:border-[#F05324] focus:outline-none focus:ring-1 focus:ring-[#F05324]"
-                                    placeholder="სახელი"
+                                    placeholder={dict.firstNamePlaceholder}
                                 />
                             </div>
                             <div className="space-y-1">
                                 <label className="text-sm font-medium text-gec-navy dark:text-gray-300">
-                                    გვარი <span className="text-red-500">*</span>
+                                    {dict.lastNameLabel} <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                     required
@@ -271,7 +273,7 @@ export default function LeadForm() {
                                     value={formData.lastName}
                                     onChange={handleChange}
                                     className="w-full rounded-lg border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 p-3 text-gec-navy dark:text-white placeholder-gray-400 focus:border-[#F05324] focus:outline-none focus:ring-1 focus:ring-[#F05324]"
-                                    placeholder="გვარი"
+                                    placeholder={dict.lastNamePlaceholder}
                                 />
                             </div>
                         </div>
@@ -279,7 +281,7 @@ export default function LeadForm() {
                         {/* Company Name */}
                         <div className="space-y-1">
                             <label className="text-sm font-medium text-gec-navy dark:text-gray-300">
-                                კომპანიის დასახელება <span className="text-red-500">*</span>
+                                {dict.companyNameLabel} <span className="text-red-500">*</span>
                             </label>
                             <input
                                 required
@@ -288,7 +290,7 @@ export default function LeadForm() {
                                 value={formData.companyName}
                                 onChange={handleChange}
                                 className="w-full rounded-lg border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 p-3 text-gec-navy dark:text-white placeholder-gray-400 focus:border-[#F05324] focus:outline-none focus:ring-1 focus:ring-[#F05324]"
-                                placeholder="კომპანიის სახელი"
+                                placeholder={dict.companyNamePlaceholder}
                             />
                         </div>
 
@@ -296,7 +298,7 @@ export default function LeadForm() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-1">
                                 <label className="text-sm font-medium text-gec-navy dark:text-gray-300">
-                                    ელ. ფოსტა <span className="text-red-500">*</span>
+                                    {dict.emailLabel} <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                     required
@@ -310,16 +312,13 @@ export default function LeadForm() {
                                 {showDomainWarning && !emailError && (
                                     <div className="flex items-start gap-2 mt-2 text-orange-400 text-sm animate-fadeIn">
                                         <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
-                                        <p>
-                                            საჯარო ელ-ფოსტის (მაგ: Gmail, Yahoo) გამოყენებისას, თქვენ ვერ მიიღებთ გუნდის საერთო ანგარიშს.
-                                            სრული ანალიტიკისთვის გირჩევთ გამოიყენოთ კორპორატიული მეილი.
-                                        </p>
+                                        <p>{dict.domainWarning}</p>
                                     </div>
                                 )}
                                 {emailError === "exists" && (
                                     <div className="flex items-start gap-2 mt-2 text-gec-navy bg-blue-50 p-2 rounded text-sm animate-fadeIn border border-blue-100">
                                         <p>
-                                            ეს ელ-ფოსტა უკვე გამოყენებულია. <Link href="/my-report" className="text-[#F05324] font-bold underline">შედით თქვენს ანგარიშში</Link> რეპორტის სანახავად.
+                                            {dict.emailExistsPrefix}<Link href="/my-report" className="text-[#F05324] font-bold underline">{dict.emailExistsLinkText}</Link>{dict.emailExistsSuffix}
                                         </p>
                                     </div>
                                 )}
@@ -327,7 +326,7 @@ export default function LeadForm() {
 
                             <div className="space-y-1">
                                 <label className="text-sm font-medium text-gec-navy dark:text-gray-300">
-                                    ტელეფონის ნომერი <span className="text-red-500">*</span>
+                                    {dict.phoneLabel} <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                     required
@@ -344,7 +343,7 @@ export default function LeadForm() {
                         {/* Company Size */}
                         <div className="space-y-1">
                             <label className="text-sm font-medium text-gec-navy dark:text-gray-300">
-                                თანამშრომლების რაოდენობა <span className="text-red-500">*</span>
+                                {dict.companySizeLabel} <span className="text-red-500">*</span>
                             </label>
                             <select
                                 required
@@ -353,7 +352,7 @@ export default function LeadForm() {
                                 onChange={handleChange}
                                 className="w-full rounded-lg border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 p-3 text-gec-navy dark:text-white focus:border-[#F05324] focus:outline-none focus:ring-1 focus:ring-[#F05324] [&>option]:bg-white dark:[&>option]:bg-[#153749] [&>option]:text-gec-navy dark:[&>option]:text-white"
                             >
-                                <option value="" disabled>აირჩიეთ რაოდენობა</option>
+                                <option value="" disabled>{dict.companySizePlaceholder}</option>
                                 <option value="1-10">1-10</option>
                                 <option value="11-50">11-50</option>
                                 <option value="51-200">51-200</option>
@@ -377,7 +376,7 @@ export default function LeadForm() {
                                     </svg>
                                 </div>
                                 <span className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed user-select-none">
-                                    თანახმა ვარ მივიღო მარკეტინგული სახის შეტყობინებები GEC-ისგან
+                                    {dict.marketingConsentLabel}
                                 </span>
                             </label>
                         </div>
@@ -387,7 +386,7 @@ export default function LeadForm() {
                     <div className="space-y-4 animate-fadeIn">
                         <div className="space-y-1">
                             <label className="text-sm font-medium text-gec-navy dark:text-gray-300">
-                                ერთჯერადი კოდი
+                                {dict.otpLabel}
                             </label>
                             <input
                                 required
@@ -405,7 +404,7 @@ export default function LeadForm() {
                                 onClick={() => setStep('details')}
                                 className="text-sm text-gray-400 hover:text-white underline"
                             >
-                                უკან დაბრუნება / მეილის შეცვლა
+                                {dict.otpBackLink}
                             </button>
                         </div>
                     </div>
@@ -416,7 +415,7 @@ export default function LeadForm() {
                     disabled={loading}
                     className="w-full rounded-full bg-[#F05324] py-4 text-lg font-bold text-white shadow-lg transition-all hover:bg-orange-600 hover:shadow-xl disabled:opacity-50"
                 >
-                    {loading ? "მუშავდება..." : (step === 'details' ? (requireOtp ? "კოდის მიღება" : "შედეგის ნახვა") : "დადასტურება და შედეგის ნახვა")}
+                    {loading ? dict.submitProcessing : (step === 'details' ? (requireOtp ? dict.submitGetCode : dict.submitViewResult) : dict.submitConfirmAndView)}
                 </button>
             </form>
         </div>

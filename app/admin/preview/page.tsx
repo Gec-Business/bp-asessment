@@ -40,8 +40,8 @@ export default function PreviewPage() {
 
             // Set localStorage for personal report
             localStorage.setItem("assessmentScore", score.toString());
-            localStorage.setItem("userName", "სატესტო მომხმარებელი");
-            localStorage.setItem("companyName", "შპს ტესტი გრუპი");
+            localStorage.setItem("userName", "Test User");
+            localStorage.setItem("companyName", "Test Group LLC");
             localStorage.setItem("assessmentEmail", "test@example.com");
             localStorage.setItem("assessmentAnswers", JSON.stringify(dummyAnswers));
 
@@ -49,7 +49,7 @@ export default function PreviewPage() {
             router.push("/result?preview=true");
         } catch (e) {
             console.error("Failed to generate preview", e);
-            alert("შეცდომა სერვერზე დაკავშირებისას.");
+            alert("Error connecting to the server.");
         } finally {
             setLoading(false);
         }
@@ -57,32 +57,32 @@ export default function PreviewPage() {
 
     return (
         <div className="max-w-4xl mx-auto animate-fadeIn">
-            <h1 className="text-3xl font-bold text-gray-800 mb-8">სატესტო რეპორტის გენერაცია</h1>
-            
+            <h1 className="text-3xl font-bold text-gray-800 mb-8">Generate Test Report</h1>
+
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 max-w-xl">
                 <p className="text-gray-600 mb-6">
-                    ამ გვერდიდან შეგიძლიათ გახსნათ საბოლოო რეპორტის გვერდი იდეალური სატესტო მონაცემებით (მათ შორის <strong>გუნდის მრავალფეროვანი ანგარიშით</strong>), ისე რომ არ მოგიწიოთ კითხვარის თავიდან შევსება.
+                    From this page you can open the final report page with ideal test data (including a <strong>varied team report</strong>), without having to fill out the questionnaire from scratch.
                 </p>
 
                 <div className="mb-6">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                        სატესტო პირადი ქულა (1.0 - 5.0)
+                        Test Personal Score (1.0 - 5.0)
                     </label>
-                    <input 
-                        type="number" 
-                        min="1" 
-                        max="5" 
-                        step="0.1" 
+                    <input
+                        type="number"
+                        min="1"
+                        max="5"
+                        step="0.1"
                         value={score}
                         onChange={(e) => setScore(parseFloat(e.target.value))}
                         className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#F05324]/50 focus:border-[#F05324]"
                     />
-                    <p className="text-xs text-gray-500 mt-2">ეს ქულა განსაზღვრავს თუ რომელი ეტაპი/ფაზა გამოჩნდება პირად ანგარიშში.</p>
+                    <p className="text-xs text-gray-500 mt-2">This score determines which stage/phase appears in the personal report.</p>
                 </div>
 
                 <div className="mb-6">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                        სატესტო კომუნიკაციის ქულა (1.0 - 7.0)
+                        Test Communication Score (1.0 - 7.0)
                     </label>
                     <input
                         type="number"
@@ -93,7 +93,7 @@ export default function PreviewPage() {
                         onChange={(e) => setCommunicationScore(parseFloat(e.target.value))}
                         className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#049978]/50 focus:border-[#049978]"
                     />
-                    <p className="text-xs text-gray-500 mt-2">ეს ქულა განსაზღვრავს დამოუკიდებელი „კომუნიკაცია“ სექციის მაჩვენებელს ანგარიშში.</p>
+                    <p className="text-xs text-gray-500 mt-2">This score determines the reading in the independent &quot;Communication&quot; section of the report.</p>
                 </div>
 
                 <button
@@ -102,7 +102,7 @@ export default function PreviewPage() {
                     className="w-full bg-[#153749] text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-[#002D40] transition-colors disabled:opacity-70"
                 >
                     <Play size={20} />
-                    {loading ? "მზადდება..." : "სატესტო რეპორტის გახსნა"}
+                    {loading ? "Preparing..." : "Open Test Report"}
                 </button>
             </div>
         </div>

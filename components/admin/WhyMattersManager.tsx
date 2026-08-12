@@ -2,11 +2,14 @@
 
 import { useState, useEffect } from "react";
 import * as Icons from "lucide-react";
+import { useContentLocale, fieldKey } from "@/lib/i18n/ContentLocaleContext";
 
 type WhyItem = {
     id: string;
     title: string;
+    titleKa?: string | null;
     description: string;
+    descriptionKa?: string | null;
     icon: string;
     order: number;
 };
@@ -14,9 +17,11 @@ type WhyItem = {
 import IconPicker from "./IconPicker";
 
 export default function WhyMattersManager() {
+    const { contentLocale } = useContentLocale();
+    const tf = (field: string) => fieldKey(field, contentLocale);
     const [items, setItems] = useState<WhyItem[]>([]);
     const [loading, setLoading] = useState(true);
-    const [newItem, setNewItem] = useState({ title: "", description: "", icon: "Star", order: 1 });
+    const [newItem, setNewItem] = useState<any>({ title: "", titleKa: "", description: "", descriptionKa: "", icon: "Star", order: 1 });
 
     // Fetch Items
     const fetchItems = async () => {
@@ -45,7 +50,7 @@ export default function WhyMattersManager() {
                 body: JSON.stringify(newItem)
             });
             if (res.ok) {
-                setNewItem({ title: "", description: "", icon: "Star", order: items.length + 1 });
+                setNewItem({ title: "", titleKa: "", description: "", descriptionKa: "", icon: "Star", order: items.length + 1 });
                 fetchItems();
             }
         } catch (error) {
@@ -86,7 +91,10 @@ export default function WhyMattersManager() {
 
     return (
         <div className="max-w-6xl mx-auto text-black">
-            <h2 className="text-xl font-bold mb-6 text-gray-800">Add New Why Item</h2>
+            <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold text-gray-800">Add New Why Item</h2>
+                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Editing: {contentLocale === "ka" ? "Georgian" : "English"}</span>
+            </div>
 
             {/* Create Form */}
             <div className="bg-gray-50 p-6 rounded-xl shadow-sm mb-12 border border-gray-200">
@@ -96,8 +104,8 @@ export default function WhyMattersManager() {
                         <input
                             required
                             type="text"
-                            value={newItem.title}
-                            onChange={e => setNewItem({ ...newItem, title: e.target.value })}
+                            value={newItem[tf('title')] || ""}
+                            onChange={e => setNewItem({ ...newItem, [tf('title')]: e.target.value })}
                             className="w-full p-2 border border-gray-300 rounded text-black bg-white focus:ring-2 focus:ring-blue-500"
                             placeholder="Title"
                         />
@@ -116,8 +124,8 @@ export default function WhyMattersManager() {
                         <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
                         <textarea
                             required
-                            value={newItem.description}
-                            onChange={e => setNewItem({ ...newItem, description: e.target.value })}
+                            value={newItem[tf('description')] || ""}
+                            onChange={e => setNewItem({ ...newItem, [tf('description')]: e.target.value })}
                             className="w-full p-2 border border-gray-300 rounded text-black bg-white focus:ring-2 focus:ring-blue-500 h-24"
                             placeholder="Description"
                         />
@@ -156,9 +164,9 @@ export default function WhyMattersManager() {
                                 <label className="text-xs font-bold text-gray-500 uppercase">Title</label>
                                 <input
                                     type="text"
-                                    value={item.title}
+                                    value={(item as any)[tf('title')] || ""}
                                     onChange={(e) => {
-                                        const newItems = items.map(i => i.id === item.id ? { ...i, title: e.target.value } : i);
+                                        const newItems = items.map(i => i.id === item.id ? { ...i, [tf('title')]: e.target.value } : i);
                                         setItems(newItems);
                                     }}
                                     className="w-full p-2 border border-gray-300 rounded text-black bg-white"
@@ -179,9 +187,9 @@ export default function WhyMattersManager() {
                             <div className="md:col-span-2">
                                 <label className="text-xs font-bold text-gray-500 uppercase">Description</label>
                                 <textarea
-                                    value={item.description}
+                                    value={(item as any)[tf('description')] || ""}
                                     onChange={(e) => {
-                                        const newItems = items.map(i => i.id === item.id ? { ...i, description: e.target.value } : i);
+                                        const newItems = items.map(i => i.id === item.id ? { ...i, [tf('description')]: e.target.value } : i);
                                         setItems(newItems);
                                     }}
                                     className="w-full p-2 border border-gray-300 rounded text-black bg-white h-20"
@@ -204,7 +212,9 @@ export default function WhyMattersManager() {
                             <button
                                 onClick={() => handleUpdate(item.id, {
                                     title: item.title,
+                                    titleKa: item.titleKa,
                                     description: item.description,
+                                    descriptionKa: item.descriptionKa,
                                     order: item.order,
                                     icon: item.icon
                                 })}

@@ -45,18 +45,22 @@ enum ScoringSystem {
 model Question {
   id              Int           @id @default(autoincrement())
   text            String
+  textKa          String?
   shortLabel      String        @default("")
+  shortLabelKa    String?
   order           Int           @default(0)
   questionType    QuestionType  @default(matrix_1_5)
   scoringSystem   ScoringSystem @default(maturity)
   isReverseScored Boolean       @default(false)
   construct       String?
+  constructKa     String?
   answers         Answer[]
 }
 
 model Answer {
   id         Int      @id @default(autoincrement())
   text       String
+  textKa     String?
   score      Int
   order      Int      @default(0)
   questionId Int
@@ -64,28 +68,41 @@ model Answer {
 }
 
 model Phase {
-  id              Int    @id @default(autoincrement())
-  title           String
-  subtitle        String @default("")
-  color           String @default("#F05324")
-  icon            String @default("Box") // Lucide icon name
-  essence         String @default("")
-  characteristics String @default("[]")
-  focus           String @default("[]")
-  challenges      String @default("[]")
-  meaningPoints   String @default("[]")
-  manifestation   String @default("{}")
-  benefits        String @default("[]")
-  recommendations String @default("")
+  id                Int    @id @default(autoincrement())
+  title             String
+  titleKa           String?
+  subtitle          String @default("")
+  subtitleKa        String?
+  color             String @default("#F05324")
+  icon              String @default("Box") // Lucide icon name
+  essence           String @default("")
+  essenceKa         String?
+  characteristics   String @default("[]")
+  characteristicsKa String?
+  focus             String @default("[]")
+  focusKa           String?
+  challenges        String @default("[]")
+  challengesKa      String?
+  meaningPoints     String @default("[]")
+  meaningPointsKa   String?
+  manifestation     String @default("{}")
+  manifestationKa   String?
+  benefits          String @default("[]")
+  benefitsKa        String?
+  recommendations   String @default("")
+  recommendationsKa String?
 }
 
 model LandingStep {
-  id          Int    @id @default(autoincrement())
-  stepNumber  Int
-  title       String
-  subtitle    String
-  description String
-  icon        String @default("Box") // Lucide icon name
+  id            Int    @id @default(autoincrement())
+  stepNumber    Int
+  title         String
+  titleKa       String?
+  subtitle      String
+  subtitleKa    String?
+  description   String
+  descriptionKa String?
+  icon          String @default("Box") // Lucide icon name
 }
 
 
@@ -95,38 +112,61 @@ model GlobalSettings {
   logoUrl      String @default("/logo.png")
   colors       String @default("{}") // JSON string: { primary: "...", secondary: "..." }
   thresholds   String @default("{}") // JSON string: { "1": 1.99, "2": 2.99 ... }
-  heroTitle    String @default("ბიზნეს პროცესების სიმწიფის შეფასება")
-  heroSubtitle String @default("განსაზღვრეთ თქვენი კომპანიის განვითარების ეტაპი და მიიღეთ რეკომენდაციები შემდეგი ნაბიჯებისთვის.")
-  buttonText   String @default("შეფასების დაწყება")
+  heroTitle    String @default("Business Process Maturity Assessment")
+  heroTitleKa  String?
+  heroSubtitle String @default("Determine your company's stage of development and get recommendations for the next steps.")
+  heroSubtitleKa String?
+  buttonText   String @default("Start the Assessment")
+  buttonTextKa String?
   footerText   String @default("© 2026 GEC Business. All rights reserved.")
+  footerTextKa String?
   contactEmail String @default("info@gec-consulting.com")
   contactAddress String @default("Tbilisi, Georgia")
+  contactAddressKa String?
   requireOtp     Boolean @default(true)
-  
+
   // New Fields for Text Management
-  assessmentPageTitle     String @default("სტრატეგიული შეფასება")
-  assessmentPageSubtitle  String @default("გთხოვთ უპასუხოთ კითხვებს გულწრფელად")
-  assessmentPromptText    String @default("უკვე გავლილი გაქვთ თვითშეფასება? ეწვიეთ ამ ბმულს:")
-  myReportBtnText         String @default("ჩემი ანგარიში")
-  whyMattersTitle         String @default("რატომ არის ეს მნიშვნელოვანი?")
+  assessmentPageTitle     String @default("Strategic Assessment")
+  assessmentPageTitleKa   String?
+  assessmentPageSubtitle  String @default("Please answer the questions honestly")
+  assessmentPageSubtitleKa String?
+  assessmentPromptText    String @default("Already completed the self-assessment? Visit this link:")
+  assessmentPromptTextKa  String?
+  myReportBtnText         String @default("My Report")
+  myReportBtnTextKa       String?
+  whyMattersTitle         String @default("Why does this matter?")
+  whyMattersTitleKa       String?
 
-  termsAndConditionsText  String @default("შეფასების გასაგრძელებლად გთხოვთ გაეცნოთ წესებსა და პირობებს და დაეთანხმოთ მათ.")
-  
+  termsAndConditionsText  String @default("Please review and agree to the terms and conditions to continue with the assessment.")
+  termsAndConditionsTextKa String?
+
   resultPageTitle         String @default("Strategic Maturity Assessment")
-  resultPersonalReportBtn String @default("პირადი ანგარიში")
-  resultCompanyReportBtn  String @default("გუნდის ანგარიში")
-  resultOrganizationLabel String @default("ორგანიზაცია")
-  resultScoreLabel        String @default("ქულა")
-  resultDownloadBtnText   String @default("სრული რეპორტის ჩამოტვირთვა (PDF)")
-  resultRestartBtnText    String @default("თავიდან დაწყება")
-  resultNoDataText        String @default("მონაცემები არ არის")
-  
-  phaseEssenceLabel         String @default("ძირითადი არსი")
-  phaseCharacteristicsLabel String @default("საკვანზო მახასიათებლები")
-  phaseFocusLabel           String @default("ფოკუსი")
+  resultPageTitleKa       String?
+  resultPersonalReportBtn String @default("Personal Report")
+  resultPersonalReportBtnKa String?
+  resultCompanyReportBtn  String @default("Team Report")
+  resultCompanyReportBtnKa String?
+  resultOrganizationLabel String @default("Organization")
+  resultOrganizationLabelKa String?
+  resultScoreLabel        String @default("Score")
+  resultScoreLabelKa      String?
+  resultDownloadBtnText   String @default("Download Full Report (PDF)")
+  resultDownloadBtnTextKa String?
+  resultRestartBtnText    String @default("Start Over")
+  resultRestartBtnTextKa  String?
+  resultNoDataText        String @default("No data available")
+  resultNoDataTextKa      String?
 
-  bookingText String?
-  bookingLink String?
+  phaseEssenceLabel         String @default("Essence")
+  phaseEssenceLabelKa       String?
+  phaseCharacteristicsLabel String @default("Key Characteristics")
+  phaseCharacteristicsLabelKa String?
+  phaseFocusLabel           String @default("Focus")
+  phaseFocusLabelKa         String?
+
+  bookingText   String?
+  bookingTextKa String?
+  bookingLink   String?
 
   logoWidth   Int     @default(256)
   baseFontSize Int    @default(16)
@@ -141,11 +181,13 @@ model SystemText {
 }
 
 model WhyItem {
-  id          String @id @default(uuid())
-  title       String
-  description String
-  icon        String
-  order       Int
+  id            String @id @default(uuid())
+  title         String
+  titleKa       String?
+  description   String
+  descriptionKa String?
+  icon          String
+  order         Int
 }
 
 model User {

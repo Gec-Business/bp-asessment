@@ -8,6 +8,7 @@ import MaturityRadar from "@/components/MaturityRadar";
 import CompanyReportView from "@/components/assessment/CompanyReportView";
 import CommunicationReportView from "@/components/assessment/CommunicationReportView";
 import { computeCommunicationScore } from "@/lib/scoring";
+import { useDictionary } from "@/lib/i18n/LocaleProvider";
 
 const getPhaseId = (score: number) => {
     if (score < 2) return 1;
@@ -19,6 +20,7 @@ const getPhaseId = (score: number) => {
 
 export default function ResultPage() {
     const router = useRouter();
+    const dict = useDictionary().result;
     const [score, setScore] = useState<number | null>(null);
     const [userName, setUserName] = useState("");
     const [companyName, setCompanyName] = useState("");
@@ -58,14 +60,14 @@ export default function ResultPage() {
             if (settingsData) setSettings(settingsData);
             
             let finalScore = s ? parseFloat(s) : null;
-            let finalName = name || "მომხმარებელო";
+            let finalName = name || dict.guestName;
             let finalCompany = company || "Company";
             let finalAnswersStr = localStorage.getItem("assessmentAnswers");
             let finalEmail = storedEmail;
 
             if (userResultData && !userResultData.error) {
                 finalScore = userResultData.score;
-                finalName = userResultData.firstName || "მომხმარებელო";
+                finalName = userResultData.firstName || dict.guestName;
                 finalCompany = userResultData.companyName || "Company";
                 finalAnswersStr = typeof userResultData.answers === 'string' ? userResultData.answers : JSON.stringify(userResultData.answers);
                 finalEmail = userResultData.email;
@@ -118,8 +120,8 @@ export default function ResultPage() {
                     if (communicationResult.count > 0) {
                         chartData = [
                             {
-                                subject: "კომუნიკაცია",
-                                fullSubject: `დამოუკიდებელი კომუნიკაციის შეფასება: ${communicationResult.overallAverage.toFixed(2)} / 7.0 (ნორმალიზებული ამ ჩარტისთვის)`,
+                                subject: dict.communicationLabel,
+                                fullSubject: dict.communicationChartFullSubject(communicationResult.overallAverage.toFixed(2)),
                                 A: (communicationResult.overallAverage / 7) * 5,
                                 fullMark: 5
                             },
@@ -137,7 +139,7 @@ export default function ResultPage() {
             if (isPreview) {
                 setCompanyReport({
                     available: true,
-                    domain: finalCompany || "შპს ტესტი გრუპი",
+                    domain: finalCompany || dict.previewCompanyName,
                     metrics: {
                         globalAverage: finalScore || 3.5,
                         participantCount: 5
@@ -246,17 +248,17 @@ export default function ResultPage() {
                 a.click();
                 a.remove();
             } else {
-                alert("PDF გენერაციის შეცდომა.");
+                alert(dict.pdfGenerationError);
             }
         } catch (e) {
             console.error(e);
-            alert("სერვერის შეცდომა.");
+            alert(dict.serverError);
         } finally {
             setLoading(false);
         }
     };
 
-    if (score === null || !phaseConfig) return <div className="p-10 text-center text-gray-500 font-medium animate-pulse">ანგარიში იქმნება...</div>;
+    if (score === null || !phaseConfig) return <div className="p-10 text-center text-gray-500 font-medium animate-pulse">{dict.generatingReport}</div>;
 
     return (
         <main className="min-h-screen flex flex-col items-center bg-gray-50">
@@ -274,16 +276,16 @@ export default function ResultPage() {
 
                         <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6 mt-4">
                             <div className="bg-white/10 px-6 py-3 rounded-xl border border-white/20">
-                                <span className="block text-xs text-gray-300 uppercase">{settings?.resultOrganizationLabel || "ორგანიზაცია"}</span>
+                                <span className="block text-xs text-gray-300 uppercase">{settings?.resultOrganizationLabel || dict.organizationLabelFallback}</span>
                                 <span className="font-bold text-xl">{companyName}</span>
                             </div>
                             <div className="bg-[#F05324] px-6 py-3 rounded-xl shadow-lg">
-                                <span className="block text-xs text-white/80 uppercase">{settings?.resultScoreLabel || "ქულა"}</span>
+                                <span className="block text-xs text-white/80 uppercase">{settings?.resultScoreLabel || dict.scoreLabelFallback}</span>
                                 <span className="font-bold text-2xl">{score.toFixed(2)} / 5.0</span>
                             </div>
                             {communication && communication.count > 0 && (
                                 <div className="bg-[#049978] px-6 py-3 rounded-xl shadow-lg">
-                                    <span className="block text-xs text-white/80 uppercase">კომუნიკაცია</span>
+                                    <span className="block text-xs text-white/80 uppercase">{dict.communicationLabel}</span>
                                     <span className="font-bold text-2xl">{communication.overallAverage.toFixed(2)} / 7.0</span>
                                 </div>
                             )}
@@ -295,7 +297,7 @@ export default function ResultPage() {
                         {radarData.length > 0 ? (
                             <MaturityRadar data={radarData} axisColor="white" />
                         ) : (
-                            <div className="text-gray-400">{settings?.resultNoDataText || "მონაცემები არ არის"}</div>
+                            <div className="text-gray-400">{settings?.resultNoDataText || dict.noDataFallback}</div>
                         )}
                     </div>
                 </div>
@@ -312,14 +314,14 @@ export default function ResultPage() {
                                 className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 sm:px-6 sm:py-3.5 rounded-full text-xs sm:text-base font-bold transition-all duration-300 ${viewMode === 'individual' ? 'bg-[#153749] text-white shadow-md transform scale-[1.02]' : 'text-gray-500 hover:text-[#153749] hover:bg-gray-50'}`}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                                {settings?.resultPersonalReportBtn || "პირადი ანგარიში"}
+                                {settings?.resultPersonalReportBtn || dict.personalReportBtnFallback}
                             </button>
                             <button
                                 onClick={() => setViewMode('company')}
                                 className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 sm:px-6 sm:py-3.5 rounded-full text-xs sm:text-base font-bold transition-all duration-300 ${viewMode === 'company' ? 'bg-[#226263] text-white shadow-md transform scale-[1.02]' : 'text-gray-500 hover:text-[#226263] hover:bg-gray-50'}`}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                                {settings?.resultCompanyReportBtn || "გუნდის ანგარიში"}
+                                {settings?.resultCompanyReportBtn || dict.companyReportBtnFallback}
                             </button>
                         </div>
                     </div>
@@ -333,16 +335,16 @@ export default function ResultPage() {
                             </div>
                             <div className="flex-1">
                                 <p className="text-[#153749] text-sm md:text-base leading-relaxed">
-                                    გაითვალისწინეთ, შესაძლოა თქვენი გუნდის წევრებმა მოგვიანებით შეავსონ კითხვარი. გირჩევთ,{' '}
+                                    {dict.teamNoticePrefix}
                                     <a
                                         href="/my-report"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="font-bold text-[#F05324] hover:underline transition-all"
                                     >
-                                        დაიმახსოვროთ ეს ბმული
+                                        {dict.teamNoticeLinkText}
                                     </a>
-                                    {' '}და დაუბრუნდეთ ამ გვერდს მოგვიანებით...
+                                    {dict.teamNoticeSuffix}
                                 </p>
                             </div>
                         </div>
@@ -387,7 +389,7 @@ export default function ResultPage() {
                     <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl p-8 md:p-10 shadow-sm max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 animate-fadeIn">
                         <div className="flex-1 text-center md:text-left">
                             <h3 className="text-xl md:text-2xl font-bold text-[#153749] leading-tight flex items-center justify-center md:justify-start">
-                                {settings?.bookingText || 'თუ გსურთ დამატებითი განხილვა GEC-ის გუნდთან, ან დახმარება ორგანიზაციის სტრატეგიულ განვითარებაში, დაჯავშნეთ შეხვედრა ჩვენთან.'}
+                                {settings?.bookingText || dict.bookingTextFallback}
                             </h3>
                         </div>
                         <div className="shrink-0 w-full md:w-auto flex justify-center">
@@ -397,7 +399,7 @@ export default function ResultPage() {
                                 rel="noopener noreferrer"
                                 className="block text-center bg-[#002D40] text-white px-8 py-4 rounded-xl text-lg font-bold shadow-lg hover:bg-[#003d57] transition-all transform hover:scale-105"
                             >
-                                დაჯავშნე შეხვედრა
+                                {dict.bookMeetingBtn}
                             </a>
                         </div>
                     </div>
@@ -406,7 +408,7 @@ export default function ResultPage() {
                     {viewMode === 'individual' && (
                         <div className="text-center">
                             <button onClick={handleDownloadPDF} disabled={loading} className="bg-[#F05324] text-white px-8 py-4 rounded-full text-lg font-bold shadow-lg hover:bg-orange-600 transition-all disabled:opacity-70">
-                                {loading ? "იქმნება..." : (settings?.resultDownloadBtnText || "სრული რეპორტის ჩამოტვირთვა (PDF)")}
+                                {loading ? dict.generatingReport : (settings?.resultDownloadBtnText || dict.downloadBtnFallback)}
                             </button>
                         </div>
                     )}
@@ -414,7 +416,7 @@ export default function ResultPage() {
 
                 <div className="mt-8 text-center">
                     <button onClick={() => router.push('/')} className="text-gray-400 hover:text-[#153749] underline text-sm">
-                        {settings?.resultRestartBtnText || "თავიდან დაწყება"}
+                        {settings?.resultRestartBtnText || dict.restartBtnFallback}
                     </button>
                 </div>
             </motion.div>

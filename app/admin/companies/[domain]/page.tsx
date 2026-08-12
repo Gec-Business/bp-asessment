@@ -262,39 +262,39 @@ export default async function CompanyReportPage({ params }: { params: { domain: 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <InsightCard
                             icon={<TrendingUp size={24} className="text-green-500" />}
-                            title="ყველაზე ძლიერი მხარე"
+                            title="Strongest Area"
                             value={insights.strongest?.subject}
                             valueTooltip={insights.strongest?.fullSubject}
-                            subValue={`საშუალო: ${insights.strongest?.average?.toFixed(2)}`}
+                            subValue={`Average: ${insights.strongest?.average?.toFixed(2)}`}
                             color="green"
-                            tooltip="ის განზომილება, რომელშიც გუნდს ყველაზე მაღალი საშუალო ქულა აქვს."
+                            tooltip="The dimension where the team has the highest average score."
                         />
                         <InsightCard
                             icon={<TrendingDown size={24} className="text-red-500" />}
-                            title="ყველაზე სუსტი მხარე"
+                            title="Weakest Area"
                             value={insights.weakest?.subject}
                             valueTooltip={insights.weakest?.fullSubject}
-                            subValue={`საშუალო: ${insights.weakest?.average?.toFixed(2)}`}
+                            subValue={`Average: ${insights.weakest?.average?.toFixed(2)}`}
                             color="red"
-                            tooltip="ის განზომილება, რომელშიც გუნდს ყველაზე დაბალი საშუალო ქულა აქვს."
+                            tooltip="The dimension where the team has the lowest average score."
                         />
                         <InsightCard
                             icon={<CheckCircle size={24} className="text-blue-500" />}
-                            title="მაღალი თანხვედრა"
+                            title="High Consensus"
                             value={insights.consensus?.subject}
                             valueTooltip={insights.consensus?.fullSubject}
-                            subValue="გუნდი თანხმდება"
+                            subValue="Team agrees"
                             color="blue"
-                            tooltip="განზომილება, სადაც პასუხები ყველაზე მეტად ემთხვევა ერთმანეთს (ყველაზე დაბალი ვარიაცია)."
+                            tooltip="The dimension where answers align most closely with each other (lowest variance)."
                         />
                         <InsightCard
                             icon={<AlertCircle size={24} className="text-orange-500" />}
-                            title="ყველაზე დიდი აცდენა"
+                            title="Biggest Divergence"
                             value={insights.divergence?.subject}
                             valueTooltip={insights.divergence?.fullSubject}
-                            subValue="აზრთა სხვადასხვაობა"
+                            subValue="Divergence of opinion"
                             color="orange"
-                            tooltip="განზომილება, სადაც გუნდის წევრებს შორის ყველაზე დიდი აზრთა სხვადასხვაობაა (მაღალი ვარიაცია)."
+                            tooltip="The dimension with the greatest difference of opinion among team members (highest variance)."
                         />
                     </div>
 

@@ -1,0 +1,142 @@
+{
+  "landingSteps": [
+    {
+      "id": 1,
+      "title": "Developing",
+      "subtitle": "Basic and Repeatable",
+      "description": {
+        "essence": "Repeating success and building initial structures",
+        "characteristics": [
+          "Formation of core processes",
+          "Replication of successful practices",
+          "Functional strengthening"
+        ],
+        "focus": [
+          "Achieving stability",
+          "Streamlining core operations"
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "title": "Defined",
+      "subtitle": "Structured and Proactive",
+      "description": {
+        "essence": "Formal systems and control",
+        "characteristics": [
+          "Documented strategy",
+          "Standardization of processes",
+          "Establishment of structure"
+        ],
+        "focus": [
+          "Proactive planning",
+          "Process control"
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "title": "Managed",
+      "subtitle": "Compliant and Measurable",
+      "description": {
+        "essence": "Strategy integration and performance measurement",
+        "characteristics": [
+          "Deep integration of strategy",
+          "Continuous monitoring of results (KPIs)",
+          "Data-driven decision-making"
+        ],
+        "focus": [
+          "Achieving strategic goals",
+          "Measuring and optimizing efficiency"
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "title": "Optimized",
+      "subtitle": "Adaptive and Continuously Improving",
+      "description": {
+        "essence": "Continuous refinement and shaping the future",
+        "characteristics": [
+          "Continuous improvement",
+          "Culture of innovation",
+          "High adaptability"
+        ],
+        "focus": [
+          "Innovation, learning, adaptation",
+          "Proactively shaping the future"
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "title": "Initial",
+      "subtitle": "Reactive",
+      "description": {
+        "essence": "First steps from chaos toward order",
+        "characteristics": [
+          "Spontaneity",
+          "\"Firefighting\"",
+          "Informal processes",
+          "Short-term vision"
+        ],
+        "focus": [
+          "Day-to-day survival",
+          "Reacting to immediate problems"
+        ]
+      }
+    }
+  ],
+  "whyItems": [
+    {
+      "id": "cmlsdjjzx0000veestheh9sne",
+      "title": "Self-Awareness",
+      "description": "Helps you realistically assess your current state."
+    },
+    {
+      "id": "cmlsdjk090001veesiydatq9m",
+      "title": "Development Roadmap",
+      "description": "Gives you a clear picture of the steps needed to reach the next stage."
+    },
+    {
+      "id": "cmlsdjk0j0002veesti956n5z",
+      "title": "Prioritization",
+      "description": "Helps you focus on the areas that need improvement the most."
+    },
+    {
+      "id": "cmlsdjk0s0003vees3vqp6n9n",
+      "title": "Internal Communication",
+      "description": "Creates a shared language and vision within the organization."
+    },
+    {
+      "id": "cmlsdjk130004veesb0vtm7z9",
+      "title": "Sustainable Success",
+      "description": "Raising strategic maturity is directly linked to long-term success."
+    }
+  ],
+  "globalSettings": {
+    "heroTitle": "Business Process Maturity Assessment",
+    "heroSubtitle": "Complete the questionnaire to determine which stage of strategic planning your company is at.",
+    "buttonText": "Start Assessment",
+    "footerText": "© 2026 GEC - Business Growth Services. All rights reserved.",
+    "contactAddress": "Tbilisi, Georgia",
+    "assessmentPageTitle": "Self-Assessment Questionnaire",
+    "assessmentPageSubtitle": "Please answer the questions honestly",
+    "assessmentPromptText": "Already completed the self-assessment? Visit this link:",
+    "myReportBtnText": "My Report",
+    "whyMattersTitle": "Why does this matter?",
+    "termsAndConditionsText": "Confidentiality is protected\n\nThe information you provide will be processed in accordance with the Law of Georgia on Personal Data Protection, for the purpose of interpreting the data collected through this questionnaire and sending the results report to the respondent. Personal data will be used solely for the stated purposes and will not be disclosed to third parties without your consent. Submitting the completed questionnaire constitutes your consent to the processing of the information you have provided.",
+    "resultPageTitle": "Organizational Business Process Maturity Self-Assessment",
+    "resultPersonalReportBtn": "Personal Report",
+    "resultCompanyReportBtn": "Company Report",
+    "resultOrganizationLabel": "Organization",
+    "resultScoreLabel": "Score",
+    "resultDownloadBtnText": "Download Report (PDF)",
+    "resultRestartBtnText": "Start Over",
+    "resultNoDataText": "No data available",
+    "phaseEssenceLabel": "Core Essence",
+    "phaseCharacteristicsLabel": "Key Characteristics",
+    "phaseFocusLabel": "Focus",
+    "bookingText": "If you would like a further discussion with the GEC team, or assistance developing your organization's business processes, book a meeting with us."
+  }
+}

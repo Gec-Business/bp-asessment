@@ -3,11 +3,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { getLocaleFromRequest } from "@/lib/i18n/getLocaleFromRequest";
+import { localizeGlobalSettings } from "@/lib/i18n/localize";
 
+// Admin (authenticated) requests get the raw bilingual row for editing;
+// public requests get localized data with defensive fallback text.
 export async function GET(req: NextRequest) {
-    const defaultBookingText = 'თუ გსურთ დამატებითი განხილვა GEC-ის გუნდთან, ან დახმარება ორგანიზაციის სტრატეგიულ განვითარებაში, დაჯავშნეთ შეხვედრა ჩვენთან.';
+    const locale = getLocaleFromRequest(req);
+    const isAdmin = !!(await getServerSession(authOptions));
+    const defaultBookingText = 'If you would like a further discussion with the GEC team, or assistance developing your organization\'s strategic direction, book a meeting with us.';
     const defaultBookingLink = 'https://outlook.office.com/book/Bookings1@gec-consulting.com/?ismsaljsauthenabled';
-    const defaultTermsText = 'შეფასების გასაგრძელებლად გთხოვთ გაეცნოთ წესებსა და პირობებს და დაეთანხმოთ მათ.';
+    const defaultTermsText = 'Please review and agree to the terms and conditions to continue with the assessment.';
 
     try {
         let settings = await prisma.globalSettings.findFirst();
@@ -17,12 +23,15 @@ export async function GET(req: NextRequest) {
             });
         }
 
+        if (isAdmin) return NextResponse.json(settings);
+
         // Ensure booking fields have defaults if null
+        const localized = localizeGlobalSettings(settings, locale);
         return NextResponse.json({
-            ...settings,
-            bookingText: settings.bookingText || defaultBookingText,
-            bookingLink: settings.bookingLink || defaultBookingLink,
-            termsAndConditionsText: settings.termsAndConditionsText || defaultTermsText
+            ...localized,
+            bookingText: localized.bookingText || defaultBookingText,
+            bookingLink: localized.bookingLink || defaultBookingLink,
+            termsAndConditionsText: localized.termsAndConditionsText || defaultTermsText
         });
     } catch (error) {
         console.error("Fetch settings error:", error);
@@ -30,9 +39,9 @@ export async function GET(req: NextRequest) {
         const dummySettings = {
             id: 1,
             logoUrl: "/logo.png",
-            heroTitle: "ბიზნეს პროცესების სიმწიფის შეფასება",
-            heroSubtitle: "განსაზღვრეთ თქვენი კომპანიის განვითარების ეტაპი და მიიღეთ რეკომენდაციები შემდეგი ნაბიჯებისთვის.",
-            buttonText: "შეფასების დაწყება",
+            heroTitle: "Business Process Maturity Assessment",
+            heroSubtitle: "Determine your company's stage of development and get recommendations for the next steps.",
+            buttonText: "Start Assessment",
             footerText: "© 2026 GEC Business. All rights reserved.",
             bookingText: defaultBookingText,
             bookingLink: defaultBookingLink,

@@ -198,7 +198,7 @@ export default function LeadsTable() {
                                         {lead.phone || "-"}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 font-medium">
-                                        {lead.marketingConsent ? "კი" : "არა"}
+                                        {lead.marketingConsent ? "Yes" : "No"}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
                                         {lead.results[0]?.score.toFixed(2)}

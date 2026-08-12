@@ -2,14 +2,18 @@
 
 import { useState, useEffect } from "react";
 import IconPicker from "./IconPicker";
+import { useContentLocale, fieldKey } from "@/lib/i18n/ContentLocaleContext";
 
 type StepItem = {
     id: number;
     stepNumber: number;
     title: string;
+    titleKa?: string | null;
     subtitle: string;
+    subtitleKa?: string | null;
     icon: string;
     description: string; // JSON string: { essence, characteristics, focus }
+    descriptionKa?: string | null;
 };
 
 type ParsedDescription = {
@@ -40,6 +44,8 @@ function buildDescription(parsed: ParsedDescription): string {
 }
 
 export default function LandingStepEditor() {
+    const { contentLocale } = useContentLocale();
+    const tf = (field: string) => fieldKey(field, contentLocale);
     const [steps, setSteps] = useState<StepItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState<number | null>(null);
@@ -71,11 +77,11 @@ export default function LandingStepEditor() {
 
     const startEditing = (step: StepItem) => {
         setEditingStep(step.id);
-        setEditTitle(step.title);
-        setEditSubtitle(step.subtitle);
+        setEditTitle((step as any)[tf('title')] || "");
+        setEditSubtitle((step as any)[tf('subtitle')] || "");
         setEditIcon(step.icon || "Box");
 
-        const parsed = parseDescription(step.description);
+        const parsed = parseDescription((step as any)[tf('description')] || "{}");
         setEditEssence(parsed.essence);
         setEditCharacteristics(parsed.characteristics.join("\n"));
         setEditFocus(parsed.focus.join("\n"));
@@ -100,10 +106,16 @@ export default function LandingStepEditor() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     id: step.id,
-                    title: editTitle,
-                    subtitle: editSubtitle,
+                    title: step.title,
+                    titleKa: step.titleKa,
+                    subtitle: step.subtitle,
+                    subtitleKa: step.subtitleKa,
+                    description: step.description,
+                    descriptionKa: step.descriptionKa,
+                    [tf('title')]: editTitle,
+                    [tf('subtitle')]: editSubtitle,
+                    [tf('description')]: description,
                     icon: editIcon,
-                    description,
                 }),
             });
 
@@ -129,6 +141,7 @@ export default function LandingStepEditor() {
         <div className="space-y-6">
             <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold text-gray-700">Landing Page Steps ({steps.length})</h2>
+                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Editing: {contentLocale === "ka" ? "Georgian" : "English"}</span>
             </div>
 
             {steps.map((step) => (
@@ -176,7 +189,7 @@ export default function LandingStepEditor() {
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t">
                                 {/* Essence */}
                                 <div>
-                                    <label className="block text-sm font-medium text-orange-600 mb-1">ძირითადი არსი (Essence)</label>
+                                    <label className="block text-sm font-medium text-orange-600 mb-1">Essence</label>
                                     <textarea
                                         value={editEssence}
                                         onChange={(e) => setEditEssence(e.target.value)}
@@ -188,7 +201,7 @@ export default function LandingStepEditor() {
 
                                 {/* Characteristics */}
                                 <div>
-                                    <label className="block text-sm font-medium text-teal-600 mb-1">მახასიათებლები (one per line)</label>
+                                    <label className="block text-sm font-medium text-teal-600 mb-1">Characteristics (one per line)</label>
                                     <textarea
                                         value={editCharacteristics}
                                         onChange={(e) => setEditCharacteristics(e.target.value)}
@@ -200,7 +213,7 @@ export default function LandingStepEditor() {
 
                                 {/* Focus */}
                                 <div>
-                                    <label className="block text-sm font-medium text-yellow-600 mb-1">ფოკუსი (one per line)</label>
+                                    <label className="block text-sm font-medium text-yellow-600 mb-1">Focus (one per line)</label>
                                     <textarea
                                         value={editFocus}
                                         onChange={(e) => setEditFocus(e.target.value)}
@@ -236,12 +249,12 @@ export default function LandingStepEditor() {
                                     <span className="text-xs font-bold text-gray-400 uppercase">Step {step.stepNumber}</span>
                                     <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">{step.icon}</span>
                                 </div>
-                                <h3 className="font-bold text-gray-800 text-lg">{step.title}</h3>
-                                <p className="text-sm text-gray-500 italic mb-3">{step.subtitle}</p>
+                                <h3 className="font-bold text-gray-800 text-lg">{(step as any)[tf('title')] || step.title}</h3>
+                                <p className="text-sm text-gray-500 italic mb-3">{(step as any)[tf('subtitle')] || step.subtitle}</p>
 
                                 {/* Preview the 3 fields */}
                                 {(() => {
-                                    const parsed = parseDescription(step.description);
+                                    const parsed = parseDescription((step as any)[tf('description')] || "{}");
                                     return (
                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm mt-3 p-3 bg-white rounded-lg border">
                                             <div>

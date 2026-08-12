@@ -24,14 +24,14 @@ export default function LoginPage() {
             });
 
             if (res?.error) {
-                setError("არასწორი მეილი ან პაროლი");
+                setError("Incorrect email or password");
                 setLoading(false);
             } else {
                 router.push("/admin");
                 router.refresh();
             }
         } catch (error) {
-            setError("სისტემური შეცდომა");
+            setError("System error");
             setLoading(false);
         }
     };
@@ -85,7 +85,7 @@ export default function LoginPage() {
                         disabled={loading}
                         className="w-full py-3 bg-[#F05324] hover:bg-[#d94a1f] text-white font-bold rounded-lg shadow-lg transform transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        {loading ? "შესვლა..." : "სისტემაში შესვლა"}
+                        {loading ? "Signing in..." : "Sign In"}
                     </button>
                 </form>
             </div>

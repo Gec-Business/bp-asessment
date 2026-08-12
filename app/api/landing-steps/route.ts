@@ -4,13 +4,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { getLocaleFromRequest } from "@/lib/i18n/getLocaleFromRequest";
+import { localizeLandingStep } from "@/lib/i18n/localize";
 
-export async function GET() {
+// Admin (authenticated) requests get raw bilingual rows for editing;
+// public requests get localized single-language data.
+export async function GET(req: NextRequest) {
+    const locale = getLocaleFromRequest(req);
+    const isAdmin = !!(await getServerSession(authOptions));
     try {
         const steps = await prisma.landingStep.findMany({
             orderBy: { stepNumber: 'asc' }
         });
-        return NextResponse.json(steps.length > 0 ? steps : []);
+        return NextResponse.json(isAdmin ? steps : steps.map((s) => localizeLandingStep(s, locale)));
     } catch (error) {
         console.error("Failed to fetch landing steps:", error);
         return NextResponse.json([], { status: 500 });
@@ -23,15 +29,18 @@ export async function PUT(req: NextRequest) {
 
     try {
         const body = await req.json();
-        const { id, title, subtitle, icon, description } = body;
+        const { id, title, titleKa, subtitle, subtitleKa, icon, description, descriptionKa } = body;
 
         const updated = await prisma.landingStep.update({
             where: { id: parseInt(id) },
             data: {
                 title,
+                titleKa,
                 subtitle,
+                subtitleKa,
                 icon: icon || "Box",
                 description,
+                descriptionKa,
             },
         });
 

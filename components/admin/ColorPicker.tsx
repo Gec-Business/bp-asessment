@@ -4,9 +4,9 @@ import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
 const COLOR_OPTIONS = [
-    { value: "red", label: "წითელი", hex: "#F05324" },
-    { value: "yellow", label: "ყვითელი", hex: "#F0B91C" },
-    { value: "green", label: "მწვანე", hex: "#049978" },
+    { value: "red", label: "Red", hex: "#F05324" },
+    { value: "yellow", label: "Yellow", hex: "#F0B91C" },
+    { value: "green", label: "Green", hex: "#049978" },
 ];
 
 type ColorPickerProps = {
@@ -31,7 +31,7 @@ export default function ColorPicker({ value, onChange }: ColorPickerProps) {
                         style={{ backgroundColor: current?.hex || "#E5E7EB" }}
                     />
                     <span className={`text-sm font-medium ${current ? "text-gray-900" : "text-gray-500"}`}>
-                        {current?.label || "აირჩიეთ ფერი..."}
+                        {current?.label || "Select a color..."}
                     </span>
                 </div>
                 <ChevronDown className="w-4 h-4 text-gray-400 group-hover:text-gec-orange transition-colors" />

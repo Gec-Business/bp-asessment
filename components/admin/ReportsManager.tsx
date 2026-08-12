@@ -2,21 +2,33 @@
 
 import { useEffect, useState, useCallback } from "react";
 import BlockListEditor from './BlockListEditor';
+import { useContentLocale, fieldKey } from "@/lib/i18n/ContentLocaleContext";
 
 type PhaseConfig = {
     id: number;
     title: string;
+    titleKa?: string | null;
     subtitle: string;
+    subtitleKa?: string | null;
     meaningPoints: string; // JSON string
+    meaningPointsKa?: string | null;
     manifestation: string; // JSON string
+    manifestationKa?: string | null;
     challenges: string; // JSON string
+    challengesKa?: string | null;
     benefits: string; // JSON string
+    benefitsKa?: string | null;
     recommendations: string;
+    recommendationsKa?: string | null;
     essence: string; // New field
+    essenceKa?: string | null;
     focus: string; // JSON string (List)
+    focusKa?: string | null;
 };
 
 export default function ReportsManager() {
+    const { contentLocale } = useContentLocale();
+    const tf = (field: string) => fieldKey(field, contentLocale);
     const [phases, setPhases] = useState<PhaseConfig[]>([]);
     const [loading, setLoading] = useState(true);
     const [activePhase, setActivePhase] = useState<number>(1);
@@ -65,7 +77,7 @@ export default function ReportsManager() {
         }
     };
 
-    const handleFieldChange = (field: keyof PhaseConfig, value: string) => {
+    const handleFieldChange = (field: string, value: string) => {
         if (form) setForm({ ...form, [field]: value });
     };
 
@@ -85,28 +97,50 @@ export default function ReportsManager() {
                             : "text-gray-500 hover:text-gray-700"
                             }`}
                     >
-                        {p.id}. {p.title}
+                        {p.id}. {(p as any)[tf('title')] || p.title}
                     </button>
                 ))}
             </div>
 
             {/* Editor */}
             <div className="bg-white border rounded-xl p-6 shadow-sm space-y-6">
+                <div className="flex justify-end -mb-2">
+                    <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Editing: {contentLocale === "ka" ? "Georgian" : "English"}</span>
+                </div>
                 <div className="grid grid-cols-2 gap-4">
                     <div>
                         <label className="block text-sm font-medium mb-1 text-gray-700">Title</label>
                         <input
-                            value={form.title}
-                            onChange={e => handleFieldChange("title", e.target.value)}
+                            value={(form as any)[tf('title')] || ""}
+                            onChange={e => handleFieldChange(tf('title'), e.target.value)}
                             className="w-full border p-2 rounded text-gray-900"
                         />
                     </div>
                     <div>
                         <label className="block text-sm font-medium mb-1 text-gray-700">Subtitle</label>
                         <input
-                            value={form.subtitle}
-                            onChange={e => handleFieldChange("subtitle", e.target.value)}
+                            value={(form as any)[tf('subtitle')] || ""}
+                            onChange={e => handleFieldChange(tf('subtitle'), e.target.value)}
                             className="w-full border p-2 rounded text-gray-900"
+                        />
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-sm font-medium mb-1 text-gray-700">Essence</label>
+                        <textarea
+                            value={(form as any)[tf('essence')] || ""}
+                            onChange={e => handleFieldChange(tf('essence'), e.target.value)}
+                            className="w-full border p-2 rounded h-20 text-gray-900"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium mb-1 text-gray-700">Focus</label>
+                        <textarea
+                            value={(form as any)[tf('focus')] || ""}
+                            onChange={e => handleFieldChange(tf('focus'), e.target.value)}
+                            className="w-full border p-2 rounded h-20 text-gray-900"
                         />
                     </div>
                 </div>
@@ -118,8 +152,8 @@ export default function ReportsManager() {
                 <div>
                     <BlockListEditor
                         label="Meaning Points (Cards)"
-                        value={form.meaningPoints}
-                        onChange={(val) => handleFieldChange("meaningPoints", val)}
+                        value={(form as any)[tf('meaningPoints')] || "[]"}
+                        onChange={(val) => handleFieldChange(tf('meaningPoints'), val)}
                         fields={[
                             { name: "icon", label: "Icon", type: "icon" },
                             { name: "title", label: "Title", type: "text", placeholder: "e.g. Daily Firefighting" },
@@ -142,9 +176,10 @@ export default function ReportsManager() {
                         // For speed, let's use BlockListEditor with a single field "text" and adapt the data.
 
                         // Adapter Logic:
+                        const manifestationField = tf('manifestation');
                         let currentList: string[] = [];
                         try {
-                            const parsed = JSON.parse(form.manifestation || "{}");
+                            const parsed = JSON.parse((form as any)[manifestationField] || "{}");
                             currentList = parsed[key] || [];
                         } catch (e) { currentList = [] }
 
@@ -162,9 +197,9 @@ export default function ReportsManager() {
                                             const newObjs = JSON.parse(newVal);
                                             const strings = newObjs.map((o: any) => o.text);
 
-                                            const oldManifestation = JSON.parse(form.manifestation || "{}");
+                                            const oldManifestation = JSON.parse((form as any)[manifestationField] || "{}");
                                             const newManifestation = { ...oldManifestation, [key]: strings };
-                                            handleFieldChange("manifestation", JSON.stringify(newManifestation));
+                                            handleFieldChange(manifestationField, JSON.stringify(newManifestation));
                                         } catch (e) { console.error(e) }
                                     }}
                                     fields={[{ name: "text", label: "Item", type: "textarea", placeholder: "Detail..." }]}
@@ -177,8 +212,8 @@ export default function ReportsManager() {
                 <div>
                     <BlockListEditor
                         label="Challenges"
-                        value={form.challenges}
-                        onChange={(val) => handleFieldChange("challenges", val)}
+                        value={(form as any)[tf('challenges')] || "[]"}
+                        onChange={(val) => handleFieldChange(tf('challenges'), val)}
                         fields={[
                             { name: "icon", label: "Icon", type: "icon" },
                             { name: "title", label: "Title", type: "text", placeholder: "Title" },
@@ -189,12 +224,12 @@ export default function ReportsManager() {
 
                 <div>
                     <BlockListEditor
-                        label="რა დადებით შედეგებს მოგვიტანს განვითარების შემდეგ ეტაპზე გადასვლა?"
-                        value={form.benefits}
-                        onChange={(val) => handleFieldChange("benefits", val)}
+                        label="Benefits of Moving to the Next Phase"
+                        value={(form as any)[tf('benefits')] || "[]"}
+                        onChange={(val) => handleFieldChange(tf('benefits'), val)}
                         fields={[
                             { name: "color", label: "Color", type: "color" },
-                            { name: "title", label: "Title", type: "text", placeholder: "e.g. პროგნოზირებადი შედეგები" },
+                            { name: "title", label: "Title", type: "text", placeholder: "e.g. Predictable Results" },
                             { name: "desc", label: "Description", type: "textarea", placeholder: "Description..." }
                         ]}
                     />
@@ -203,8 +238,8 @@ export default function ReportsManager() {
                 <div>
                     <label className="block text-sm font-medium mb-1 text-gray-700">Recommendations</label>
                     <textarea
-                        value={form.recommendations}
-                        onChange={e => setForm({ ...form, recommendations: e.target.value })}
+                        value={(form as any)[tf('recommendations')] || ""}
+                        onChange={e => handleFieldChange(tf('recommendations'), e.target.value)}
                         className="w-full border p-2 rounded h-20 text-gray-900"
                     />
                 </div>

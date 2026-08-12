@@ -2,6 +2,7 @@
 
 import { ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend } from 'recharts';
 import { Building, Users, TrendingUp, TrendingDown, AlertCircle, CheckCircle, Info } from 'lucide-react';
+import { useDictionary } from "@/lib/i18n/LocaleProvider";
 
 type ReportData = {
     domain: string;
@@ -20,6 +21,7 @@ type ReportData = {
 };
 
 export default function CompanyReportView({ data }: { data: ReportData }) {
+    const dict = useDictionary().companyReport;
     // Collect anonymous keys for overlay
     const overlayKeys = Object.keys(data.overlayData[0] || {}).filter(k => k.startsWith('anon_'));
 
@@ -31,15 +33,15 @@ export default function CompanyReportView({ data }: { data: ReportData }) {
                     <div>
                         <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
                             <Building className="text-gec-orange" />
-                            {data.domain} - გუნდის საერთო ანგარიში
+                            {data.domain} {dict.titleSuffix}
                         </h2>
                         <p className="text-gray-500 mt-2 text-base">
-                            ეს ანგარიში ეყრდნობა გუნდის <strong className="text-[#F05324] text-lg">{data.metrics.participantCount}</strong> წევრის შეფასებას.
+                            {dict.basedOnMembers(data.metrics.participantCount)}
                         </p>
                     </div>
                     <div className="text-center bg-blue-50 px-8 py-4 rounded-xl">
                         <div className="text-4xl font-bold text-[#F05324]">{data.metrics.globalAverage.toFixed(2)}</div>
-                        <div className="text-xs font-bold text-gray-500 uppercase tracking-widest mt-1">გუნდის სიმწიფის ქულა</div>
+                        <div className="text-xs font-bold text-gray-500 uppercase tracking-widest mt-1">{dict.teamMaturityScore}</div>
                     </div>
                 </div>
             </div>
@@ -48,39 +50,39 @@ export default function CompanyReportView({ data }: { data: ReportData }) {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <InsightCard
                     icon={<TrendingUp size={24} className="text-green-500" />}
-                    title="ყველაზე ძლიერი მხარე"
+                    title={dict.strongestArea}
                     value={data.insights.strongest?.subject}
                     valueTooltip={data.insights.strongest?.fullSubject}
-                    subValue={`საშუალო: ${data.insights.strongest?.average?.toFixed(2)}`}
+                    subValue={dict.average(data.insights.strongest?.average?.toFixed(2))}
                     color="green"
-                    tooltip="ის განზომილება, რომელშიც გუნდს ყველაზე მაღალი საშუალო ქულა აქვს."
+                    tooltip={dict.tooltipStrongest}
                 />
                 <InsightCard
                     icon={<TrendingDown size={24} className="text-red-500" />}
-                    title="ყველაზე სუსტი მხარე"
+                    title={dict.weakestArea}
                     value={data.insights.weakest?.subject}
                     valueTooltip={data.insights.weakest?.fullSubject}
-                    subValue={`საშუალო: ${data.insights.weakest?.average?.toFixed(2)}`}
+                    subValue={dict.average(data.insights.weakest?.average?.toFixed(2))}
                     color="red"
-                    tooltip="ის განზომილება, რომელშიც გუნდს ყველაზე დაბალი საშუალო ქულა აქვს."
+                    tooltip={dict.tooltipWeakest}
                 />
                 <InsightCard
                     icon={<CheckCircle size={24} className="text-blue-500" />}
-                    title="მაღალი თანხვედრა"
+                    title={dict.highConsensus}
                     value={data.insights.consensus?.subject}
                     valueTooltip={data.insights.consensus?.fullSubject}
-                    subValue="გუნდი თანხმდება"
+                    subValue={dict.teamAgrees}
                     color="blue"
-                    tooltip="განზომილება, სადაც პასუხები ყველაზე მეტად ემთხვევა ერთმანეთს (ყველაზე დაბალი ვარიაცია)."
+                    tooltip={dict.tooltipConsensus}
                 />
                 <InsightCard
                     icon={<AlertCircle size={24} className="text-orange-500" />}
-                    title="ყველაზე დიდი აცდენა"
+                    title={dict.biggestDivergence}
                     value={data.insights.divergence?.subject}
                     valueTooltip={data.insights.divergence?.fullSubject}
-                    subValue="აზრთა სხვადასხვაობა"
+                    subValue={dict.opinionDivergence}
                     color="orange"
-                    tooltip="განზომილება, სადაც გუნდის წევრებს შორის ყველაზე დიდი აზრთა სხვადასხვაობაა (მაღალი ვარიაცია)."
+                    tooltip={dict.tooltipDivergence}
                 />
             </div>
 
@@ -88,7 +90,7 @@ export default function CompanyReportView({ data }: { data: ReportData }) {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Overlay Radar (Anonymous Heatmap) */}
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">გუნდის თანხვედრის რუკა (Heatmap)</h3>
+                    <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">{dict.heatmapTitle}</h3>
                     <div className="h-[400px]">
                         <ResponsiveContainer width="100%" height="100%">
                             <RadarChart cx="50%" cy="50%" outerRadius="70%" data={data.overlayData}>
@@ -115,7 +117,7 @@ export default function CompanyReportView({ data }: { data: ReportData }) {
 
                 {/* Avg vs Median */}
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">საშუალო ქულა მედიანის წინააღმდეგ</h3>
+                    <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">{dict.avgVsMedianTitle}</h3>
                     <div className="h-[400px]">
                         <ResponsiveContainer width="100%" height="100%">
                             <RadarChart cx="50%" cy="50%" outerRadius="70%" data={data.aggregateData}>
@@ -123,7 +125,7 @@ export default function CompanyReportView({ data }: { data: ReportData }) {
                                 <PolarAngleAxis dataKey="subject" tick={<CustomTick data={data.aggregateData} />} />
                                 <PolarRadiusAxis angle={90} domain={[0, 5]} tick={false} axisLine={false} />
                                 <Radar
-                                    name="საშუალო"
+                                    name={dict.radarAverage}
                                     dataKey="average"
                                     stroke="#00A98F"
                                     strokeWidth={3}
@@ -131,7 +133,7 @@ export default function CompanyReportView({ data }: { data: ReportData }) {
                                     fillOpacity={0.2}
                                 />
                                 <Radar
-                                    name="მედიანა"
+                                    name={dict.radarMedian}
                                     dataKey="median"
                                     stroke="#F05324"
                                     strokeWidth={3}

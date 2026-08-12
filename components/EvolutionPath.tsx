@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Flame, Sprout, Target, BarChart3, Gem, Box } from "lucide-react";
+import { useDictionary, useLocale } from "@/lib/i18n/LocaleProvider";
 
 type StepData = {
     id: number;
@@ -28,17 +29,20 @@ const initialSteps: StepData[] = [];
 const PHASE_COLORS = ["#049978", "#F0B91C", "#F05324", "#049978", "#F0B91C"];
 
 export default function EvolutionPath({ labels }: { labels?: { essence?: string; characteristics?: string; focus?: string; } }) {
+    const phaseLabels = useDictionary().phaseLabels;
+    const { locale } = useLocale();
     const [activeStep, setActiveStep] = useState<number | null>(null);
     const [steps, setSteps] = useState<StepData[]>(initialSteps);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetchPhases();
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [locale]);
 
     const fetchPhases = async () => {
         try {
-            const res = await fetch("/api/landing-steps");
+            const res = await fetch("/api/landing-steps", { cache: "no-store" });
             const data = await res.json();
 
             if (data.length > 0) {
@@ -166,13 +170,13 @@ export default function EvolutionPath({ labels }: { labels?: { essence?: string;
                                                         <div className="space-y-6 text-left">
                                                             <div>
                                                                 <h4 className="text-[#F05324] font-bold uppercase tracking-wider mb-2 text-xs">
-                                                                    {labels?.essence || "ძირითადი არსი"}
+                                                                    {labels?.essence || phaseLabels.essence}
                                                                 </h4>
                                                                 <p className="text-white text-sm font-medium leading-relaxed break-words">{details.essence}</p>
                                                             </div>
                                                             <div>
                                                                 <h4 className="text-[#F05324] font-bold uppercase tracking-wider mb-2 text-xs">
-                                                                    {labels?.characteristics || "საკვანძო მახასიათებლები"}
+                                                                    {labels?.characteristics || phaseLabels.characteristics}
                                                                 </h4>
                                                                 <ul className="space-y-1">
                                                                     {details.characteristics?.map((item: string, i: number) => (
@@ -184,7 +188,7 @@ export default function EvolutionPath({ labels }: { labels?: { essence?: string;
                                                             </div>
                                                             <div>
                                                                 <h4 className="text-[#F05324] font-bold uppercase tracking-wider mb-2 text-xs">
-                                                                    {labels?.focus || "ფოკუსი"}
+                                                                    {labels?.focus || phaseLabels.focus}
                                                                 </h4>
                                                                 <ul className="space-y-1">
                                                                     {details.focus?.map((item: string, i: number) => (
@@ -241,7 +245,7 @@ export default function EvolutionPath({ labels }: { labels?: { essence?: string;
                                             {/* Column 1: Essence */}
                                             <div className="border-b md:border-b-0 md:border-r border-white/20 pb-6 md:pb-0 md:pr-6">
                                                 <h4 className="text-[#F05324] font-bold uppercase tracking-wider mb-4 text-sm">
-                                                    {labels?.essence || "ძირითადი არსი"}
+                                                    {labels?.essence || phaseLabels.essence}
                                                 </h4>
                                                 <p className="text-white text-lg font-medium leading-relaxed">{details.essence}</p>
                                             </div>
@@ -249,7 +253,7 @@ export default function EvolutionPath({ labels }: { labels?: { essence?: string;
                                             {/* Column 2: Characteristics */}
                                             <div className="border-b md:border-b-0 md:border-r border-white/20 pb-6 md:pb-0 md:px-6">
                                                 <h4 className="text-[#F05324] font-bold uppercase tracking-wider mb-4 text-sm">
-                                                    {labels?.characteristics || "საკვანძო მახასიათებლები"}
+                                                    {labels?.characteristics || phaseLabels.characteristics}
                                                 </h4>
                                                 <ul className="space-y-2">
                                                     {details.characteristics?.map((item: string, i: number) => (
@@ -263,7 +267,7 @@ export default function EvolutionPath({ labels }: { labels?: { essence?: string;
                                             {/* Column 3: Focus */}
                                             <div className="md:pl-6">
                                                 <h4 className="text-[#F05324] font-bold uppercase tracking-wider mb-4 text-sm">
-                                                    {labels?.focus || "ფოკუსი"}
+                                                    {labels?.focus || phaseLabels.focus}
                                                 </h4>
                                                 <ul className="space-y-2">
                                                     {details.focus?.map((item: string, i: number) => (
