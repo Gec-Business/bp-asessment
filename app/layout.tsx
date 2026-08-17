@@ -5,9 +5,28 @@ import { LocaleProvider } from "@/lib/i18n/LocaleProvider";
 import LanguagePromptModal from "@/components/LanguagePromptModal";
 import "./globals.css";
 
+const title = "Business Process Maturity Assessment";
+const description = "Assess how your operations really run.";
+const ogImage = "/og-image.png";
+
 export const metadata: Metadata = {
-    title: "GEC Business Processes Maturity Assessment",
-    description: "Assess your company's strategic maturity level.",
+    metadataBase: new URL("https://ba.gecbusiness.com"),
+    title,
+    description,
+    openGraph: {
+        title,
+        description,
+        url: "https://ba.gecbusiness.com",
+        siteName: "GEC Business Growth Services",
+        images: [{ url: ogImage, width: 1200, height: 627, alt: title }],
+        type: "website",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        images: [ogImage],
+    },
 };
 
 export default async function RootLayout({
